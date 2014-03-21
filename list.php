@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<?php //Variables
-    $mainPage   = "index.php"; //Rename it only if you change index.php to downloader.php for example 
-    $folder     = "youtube/"; // Directory where you videos are downloaded
-    $listPage   = 'list.php';
-?>
+<?php require_once("config.php"); ?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -31,7 +27,6 @@
         <div class="container">
 <?php
 
-    //Delete file : 
     if(isset($_GET['fileToDel']))
     {
         $fileToDel = $_GET['fileToDel'];
@@ -62,7 +57,14 @@
             echo '<p><a href="'.$listPage.'">Go back</a></p>';
         }
     }
-    else{   ?>
+    elseif(!file_exists($folder))
+    {
+            echo '<div class="alert alert-danger">
+                    <strong>Error : </strong> Destination folder doesn\'t exist or is not found here.
+                </div>';
+    }
+    else{
+?>
             <h2>List of available videos :</h2>
             <table class="table table-striped table-hover ">
                 <thead>
