@@ -1,5 +1,12 @@
+<?php
+    require_once("config.php"); 
+    require_once("sessions.php");
+    require_once("utilities.php");
+
+    if(isset($_POST['passwd']) && !empty($_POST['passwd'])) startSession($_POST['passwd']);
+    if(isset($_GET['logout']) && $_GET['logout'] == 1) endSession();
+?>
 <!DOCTYPE html>
-<?php require_once("config.php"); ?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -27,7 +34,7 @@
         <div class="container">
             <h1>Download</h1>
 <?php
-    if(isset($_GET['url']) && !empty($_GET['url']))
+    if(isset($_GET['url']) && !empty($_GET['url']) && $_SESSION['logged'] == 1)
     {
         $url = $_GET['url'];
         $cmd = 'youtube-dl -o ' . escapeshellarg('./'.$folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
@@ -48,7 +55,8 @@
             echo '</div>';
         }
     }
-    else{?>
+    elseif(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
+    { ?>
             <form class="form-horizontal" action="<?php echo $mainPage; ?>">
                 <fieldset>
                     <div class="form-group">
@@ -70,7 +78,7 @@
                     <div class="panel panel-info">
                         <div class="panel-heading"><h3 class="panel-title">Info</h3></div>
                         <div class="panel-body">
-                            <p>Free space : <?php if(file_exists($folder)){ freeSpace(disk_free_space("./".$folder));} else {echo "Folder not found";} ?></b></p>
+                            <p>Free space : <?php if(file_exists($folder)){ human_filesize(disk_free_space("./".$folder),1);} else {echo "Folder not found";} ?></b></p>
                             <p>Download folder : <?php echo $folder ;?></p>
                         </div>
                     </div>
@@ -91,6 +99,22 @@
             </div>
 <?php
     }
+    else{ ?>
+        <form class="form-horizontal" action="<?php echo $mainPage; ?>" method="POST" >
+            <fieldset>
+                <legend>You need to login first</legend>
+                <div class="form-group">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <input class="form-control" id="passwd" name="passwd" placeholder="Password" type="password">
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+            </fieldset>
+        </form>
+<?php
+        }
+    if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1) echo '<p><a href="index.php?logout=1">Logout</a></p>';
 ?>
         </div><!-- End container -->
         <footer>
@@ -101,29 +125,3 @@
         </footer>
     </body>
 </html>
-
-<?php
-
-function freeSpace($Bytes)
-{
-    $Type = array("", "Ko", "Mo", "Go", "To");
-    $Index = 0;
-    while($Bytes >= 1024)
-    {
-        $Bytes /= 1024;
-        $Index++;
-    }
-    return(round($Bytes) . " " . $Type[$Index]);
-}
-
-function destFolderExists($destFolder)
-{
-    if(!file_exists($destFolder))
-    {
-        echo '<div class="alert alert-danger">
-                <strong>Error : </strong> Destination folder doesn\'t exist or is not found here. 
-            </div>';
-    }
-}
-
-?>
