@@ -96,7 +96,7 @@
         <footer>
             <div class="well text-center">
                 <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Fork me on Github</a></p>
-                <p>Created by <a href="https//twitter.com/p1rox" target="_blank">@p1rox</a> - Web Site : <a href="http://p1rox.fr" target="_blank">p1rox.fr</a></p>
+                <p>Created by <a href="https://twitter.com/p1rox" target="_blank">@p1rox</a> - Web Site : <a href="http://p1rox.fr" target="_blank">p1rox.fr</a></p>
             </div>
         </footer>
     </body>

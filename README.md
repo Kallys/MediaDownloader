@@ -21,5 +21,5 @@ Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host 
 ## CSS Theme
 [Flatly](http://bootswatch.com/flatly/)
 
-## Licence
+## License
 GPL v2 see LICENSE.md
