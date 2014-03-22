@@ -18,6 +18,11 @@ Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host 
 4. Check permissions.
 5. Access to your page (ex: index.php) to check that everything works.
 
+## Set a password
+1. Open config.php
+2. Set security to 1
+3. Find a password and hash it with md5 (you can do this with the md5.php page)
+
 ## CSS Theme
 [Flatly](http://bootswatch.com/flatly/)
 

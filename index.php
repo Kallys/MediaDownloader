@@ -37,7 +37,7 @@
     if(isset($_GET['url']) && !empty($_GET['url']) && $_SESSION['logged'] == 1)
     {
         $url = $_GET['url'];
-        $cmd = 'youtube-dl -o ' . escapeshellarg('./'.$folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
+        $cmd = 'youtube-dl -o ' . escapeshellarg($folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
         exec($cmd, $output, $ret);
         if($ret == 0)
         {
@@ -78,7 +78,7 @@
                     <div class="panel panel-info">
                         <div class="panel-heading"><h3 class="panel-title">Info</h3></div>
                         <div class="panel-body">
-                            <p>Free space : <?php if(file_exists($folder)){ human_filesize(disk_free_space("./".$folder),1);} else {echo "Folder not found";} ?></b></p>
+                            <p>Free space : <?php if(file_exists($folder)){ echo human_filesize(disk_free_space($folder),1)."o";} else {echo "Folder not found";} ?></b></p>
                             <p>Download folder : <?php echo $folder ;?></p>
                         </div>
                     </div>
