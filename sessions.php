@@ -27,7 +27,8 @@
 
 	function endSession()
 	{
-		global $security;
-		if($security == 1) session_destroy();
+		global $security, $mainPage;
+        if($security == 1) session_destroy();
+        header("Location: ".$mainPage);
 	}
 ?>
