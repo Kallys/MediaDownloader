@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
     require_once("config.php"); 
     require_once("sessions.php");
@@ -6,6 +5,7 @@
 
     if(isset($_GET['logout']) && $_GET['logout'] == 1) endSession();
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
