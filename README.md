@@ -12,6 +12,8 @@ Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host 
 - A web server (Apache or nginx)
 - PHP latest version should be fine.
 - [Youtube-dl](https://github.com/rg3/youtube-dl)
+- avconv or other is required for audio extraction (from youtube-dl doc) :
+`-x, --extract-audio convert video files to audio-only files (requires ffmpeg or avconv and ffprobe or avprobe)`
 
 ## How to install ?
 1. Clone this repo in your web folder (ex: /var/www).
