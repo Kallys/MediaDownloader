@@ -6,34 +6,20 @@ class Downloader
 	private $config = [];
 	private $audio_only = false;
 	private $errors = [];
+	private $download_path = "";
 
 	public function __construct($post, $audio_only)
 	{
 		$this->config = require dirname(__DIR__).'/config/config.php';
+		$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
 		$this->audio_only = $audio_only;
 
-		if($this->is_installed() != 0)
-		{
-			$errors[] = "Youtube-dl is not installed, see <a>https://rg3.github.io/youtube-dl/download.html</a> !";
-		}
+		$this->urls = explode(",", $post);
 
-		if(!$this->outuput_folder_exists())
+		if(!$this->check_requirements($audio_only))
 		{
-			$errors[] = "Output folder doesn't exist !";
-		}
-
-		if($audio_only && $this->is_extracter_installed())
-		{
-			$errors[] = "Install an audio extracter (ex: avconv) !";
-		}
-
-		if(isset($errors) && count($errors) > 0)
-		{
-			$_SESSION['errors'] = $errors;
 			return;
 		}
-
-		$this->urls = explode(",", $post);
 
 		if($this->config["max_dl"] == 0)
 		{
@@ -47,13 +33,13 @@ class Downloader
 			}
 			else
 			{
-				$errors[] = "Simultaneous downloads limit reached !"; 
+				$this->errors[] = "Simultaneous downloads limit reached !"; 
 			}
 		}
 
-		if(isset($errors) && count($errors) > 0)
+		if(isset($this->errors) && count($this->errors) > 0)
 		{
-			$_SESSION['errors'] = $errors;
+			$_SESSION['errors'] = $this->errors;
 			return;
 		}
 	}
@@ -67,6 +53,32 @@ class Downloader
 	{
 		$config = require dirname(__DIR__).'/config/config.php';
 		return $config["max_dl"];
+	}
+
+	private function check_requirements($audio_only)
+	{
+		if($this->is_installed() != 0)
+		{
+			$this->errors[] = "Youtube-dl is not installed, see <a>https://rg3.github.io/youtube-dl/download.html</a> !";
+		}
+
+		$this->check_outuput_folder();
+
+		if($audio_only)
+		{
+			if($this->is_extracter_installed() != 0)
+			{
+				$this->errors[] = "Install an audio extracter (ex: avconv) !";
+			}
+		}
+
+		if(isset($this->errors) && count($this->errors) > 0)
+		{
+			$_SESSION['errors'] = $this->errors;
+			return false;
+		}
+
+		return true;
 	}
 
 	private function is_installed()
@@ -86,18 +98,24 @@ class Downloader
 		return filter_var($url, FILTER_VALIDATE_URL);
 	}
 
-	private function outuput_folder_exists()
+	private function check_outuput_folder()
 	{
-		if(!is_dir($this->config['outputFolder']))
+		if(!is_dir($this->download_path))
 		{
 			//Folder doesn't exist
-			if(!mkdir('./'.$this->config['outputFolder'], 0777))
+			if(!mkdir($this->download_path, 0775))
 			{
-				return false; //No folder and creation failed
+				$this->errors[] = "Output folder doesn't exist and creation failed !";
 			}
 		}
-		
-		return true;
+		else
+		{
+			//Exists but can I write ?
+			if(!is_writable($this->download_path))
+			{
+				$this->errors[] = "Output folder isn't writable !";
+			}
+		}
 	}
 
 	private function do_download()
