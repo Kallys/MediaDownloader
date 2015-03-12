@@ -1,10 +1,10 @@
 <?php
 	require 'class/Session.php';
-	require 'class/VideoHandler.php';
+	require 'class/FileHandler.php';
 	require 'class/Downloader.php';
 
 	$session = Session::getInstance();
-	$video = new VideoHandler;
+	$file = new FileHandler;
 
 	if(!$session->is_logged_in())
 	{
@@ -22,14 +22,38 @@
 			}
 
 			$downloader = new Downloader($_POST['urls'], $audio_only);
-			header("Location: list.php");
+			
+			if(!isset($_SESSION['errors']))
+			{
+				if($audio_only)
+				{
+					header("Location: list.php?type=m");
+				}
+				else
+				{
+					header("Location: list.php?type=v");
+				}
+			}
 		}
 	}
 	
 	require 'views/header.php';
 ?>
 		<div class="container">
+			<br>
+			<br>
 			<h1>Download</h1>
+			<?php
+
+				if(isset($_SESSION['errors']) && $_SESSION['errors'] > 0)
+				{
+					foreach ($_SESSION['errors'] as $e)
+					{
+						echo "<div class=\"alert alert-warning\" role=\"alert\">$e</div>";
+					}
+				}
+
+			?>
 			<form id="download-form" class="form-horizontal" action="index.php" method="post">					
 				<div class="form-group">
 					<div class="col-md-10">
@@ -51,8 +75,9 @@
 					<div class="panel panel-info">
 						<div class="panel-heading"><h3 class="panel-title">Info</h3></div>
 						<div class="panel-body">
-							<p>Free space : <?php echo $video->free_space(); ?></b></p>
-							<p>Download folder : <?php echo $video->get_video_folder(); ?></p>
+							<p><b>Background downloads : <?php echo Downloader::background_jobs()." / ".Downloader::max_jobs() ?> </b></p>
+							<p>Free space : <?php echo $file->free_space(); ?></b></p>
+							<p>Download folder : <?php echo $file->get_downloads_folder(); ?></p>
 						</div>
 					</div>
 				</div>
@@ -72,5 +97,6 @@
 			</div>
 		</div>
 <?php
+	unset($_SESSION['errors']);
 	require 'views/footer.php';
 ?>

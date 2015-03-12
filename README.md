@@ -4,13 +4,16 @@
 ![List](https://github.com/p1rox/Youtube-dl-WebUI/raw/master/img/list.png)
 
 ## Description
-Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host your own video downloader. After the download you can stream your videos from your web browser or save it on your computer directly from the list page.
+Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host your own video downloader. 
+After the download you can stream your videos from your web browser or save it on your computer directly from the list page.
+It supports simultaneous downloads in background.
 
 ### You can now extract the audio of a video and download multiple videos at the same time !
 
 ## Requirements
 - A web server (Apache or nginx)
 - PHP latest version should be fine.
+- Python 2.7 for Youtube-dl
 - [Youtube-dl](https://github.com/rg3/youtube-dl)
 - avconv or other is required for audio extraction (from youtube-dl doc) :
 `-x, --extract-audio convert video files to audio-only files (requires ffmpeg or avconv and ffprobe or avprobe)`

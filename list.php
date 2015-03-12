@@ -1,31 +1,46 @@
 <?php
 	require 'class/Session.php';
-	require 'class/VideoHandler.php';
+	require 'class/FileHandler.php';
 	
 	$session = Session::getInstance();
-	$video = new VideoHandler;
+	$file = new FileHandler;
 
 	if(!$session->is_logged_in())
 	{
 		header("Location: login.php");
 	}
 
+	if(isset($_GET['type']) && !empty($_GET['type']))
+	{
+		$t = $_GET['type'];
+		if($t === 'v')
+		{
+			$type = "videos";
+			$files = $file->listVideos();
+		}
+		elseif($t === 'm')
+		{
+			$type = "musics";
+			$files = $file->listMusics();
+		}
+	}
+
 	if($session->is_logged_in() && isset($_GET["delete"]))
 	{
-		$video->delete($_GET["delete"]);
-		header("Location: list.php");
+		$file->delete($_GET["delete"], $t);
+		header("Location: list.php?type=".$t);
 	}
 
 	require 'views/header.php';
 ?>
 		<div class="container">
-		<h2>List of available videos :</h2>
+		<br>
+		<br>
 		<?php
-			$videos = $video->listVideos();
-			
-			if(!empty($videos))
+			if(!empty($files))
 			{
 		?>
+			<h2>List of available <?php echo $type ?> :</h2>
 			<table class="table table-striped table-hover ">
 				<thead>
 					<tr>
@@ -39,12 +54,12 @@
 				$i = 0;
 				$totalSize = 0;
 
-				foreach($videos as $v)
+				foreach($files as $f)
 				{
 					echo "<tr>";
-					echo "<td><a href=\"".$video->get_video_folder().'/'.$v["name"]."\" download>".$v["name"]."</a></td>";
-					echo "<td>".$v["size"]."</td>";
-					echo "<td><a href=\"./list.php?delete=$i\" class=\"btn btn-danger btn-sm\">Delete</a></td>";
+					echo "<td><a href=\"".$file->get_downloads_folder().'/'.$f["name"]."\" download>".$f["name"]."</a></td>";
+					echo "<td>".$f["size"]."</td>";
+					echo "<td><a href=\"./list.php?delete=$i&type=$t\" class=\"btn btn-danger btn-sm\">Delete</a></td>";
 					echo "</tr>";
 					$i++;
 				}
@@ -55,7 +70,14 @@
 			}
 			else
 			{
-				echo "<br><div class=\"alert alert-warning\" role=\"alert\">No videos !</div>";
+				if(isset($t) && ($t === 'v' || $t === 'm'))
+				{
+					echo "<br><div class=\"alert alert-warning\" role=\"alert\">No $type !</div>";
+				}
+				else
+				{
+					echo "<br><div class=\"alert alert-warning\" role=\"alert\">No such type !</div>";
+				}
 			}
 		?>
 			<br/>

@@ -1,8 +1,10 @@
 <?php
 
-class VideoHandler
+class FileHandler
 {
 	private $config = [];
+	private $videos_ext = ".{avi,mp4,flv}";
+	private $musics_ext = ".{mp3,ogg}";
 
 	public function __construct()
 	{
@@ -18,7 +20,7 @@ class VideoHandler
 
 		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
 
-		foreach(glob($folder.'*') as $file)
+		foreach(glob($folder.'*'.$this->videos_ext, GLOB_BRACE) as $file)
 		{
 			$video = [];
 			$video["name"] = str_replace($folder, "", $file);
@@ -30,12 +32,46 @@ class VideoHandler
 		return $videos;
 	}
 
-	public function delete($id)
+	public function listMusics()
+	{
+		$musics = [];
+
+		if(!$this->outuput_folder_exists())
+			return;
+
+		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
+
+		foreach(glob($folder.'*'.$this->musics_ext, GLOB_BRACE) as $file)
+		{
+			$music = [];
+			$music["name"] = str_replace($folder, "", $file);
+			$music["size"] = $this->to_human_filesize(filesize($file));
+			
+			$musics[] = $music;
+		}
+
+		return $musics;
+	}
+
+	public function delete($id, $type)
 	{
 		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
 		$i = 0;
 
-		foreach(glob($folder.'*') as $file)
+		if($type === 'v')
+		{
+			$exts = $this->videos_ext;
+		}
+		elseif($type === 'm')
+		{
+			$exts = $this->musics_ext;
+		}
+		else
+		{
+			return;
+		}
+
+		foreach(glob($folder.'*'.$exts, GLOB_BRACE) as $file)
 		{
 			if($i == $id)
 			{
@@ -71,7 +107,7 @@ class VideoHandler
 		return $this->to_human_filesize(disk_free_space($this->config["outputFolder"]));
 	}
 
-	public function get_video_folder()
+	public function get_downloads_folder()
 	{
 		return $this->config["outputFolder"];
 	}
