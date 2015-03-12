@@ -13,7 +13,6 @@ class Downloader
 		$this->config = require dirname(__DIR__).'/config/config.php';
 		$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
 		$this->audio_only = $audio_only;
-
 		$this->urls = explode(",", $post);
 
 		if(!$this->check_requirements($audio_only))
@@ -49,7 +48,7 @@ class Downloader
 		return shell_exec("ps aux | grep -v grep | grep youtube-dl | wc -l");
 	}
 
-	public static function max_jobs()
+	public static function max_background_jobs()
 	{
 		$config = require dirname(__DIR__).'/config/config.php';
 		return $config["max_dl"];
@@ -57,7 +56,7 @@ class Downloader
 
 	private function check_requirements($audio_only)
 	{
-		if($this->is_installed() != 0)
+		if($this->is_youtubedl_installed() != 0)
 		{
 			$this->errors[] = "Youtube-dl is not installed, see <a>https://rg3.github.io/youtube-dl/download.html</a> !";
 		}
@@ -81,7 +80,7 @@ class Downloader
 		return true;
 	}
 
-	private function is_installed()
+	private function is_youtubedl_installed()
 	{
 		exec("which youtube-dl", $out, $r);
 		return $r;
