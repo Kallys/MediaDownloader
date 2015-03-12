@@ -93,11 +93,6 @@ class Downloader
 		return $r;
 	}
 
-	private function is_valid_url($url)
-	{
-		return filter_var($url, FILTER_VALIDATE_URL);
-	}
-
 	private function check_outuput_folder()
 	{
 		if(!is_dir($this->download_path))
