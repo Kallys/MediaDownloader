@@ -36,11 +36,11 @@
 									{
 										if (strpos($key['cmd'], '-x') !== false) //Music
 										{
-											echo "<li><a href=\"#\"><i class=\"fa fa-music\"></i> Elapsed download time : ".$key['time']."</a></li>";
+											echo "<li><a href=\"#\"><i class=\"fa fa-music\"></i> Elapsed time : ".$key['time']."</a></li>";
 										}
 										else
 										{
-											echo "<li><a href=\"#\"><i class=\"fa fa-video-camera\"></i> Elapsed download time : ".$key['time']."</a></li>";
+											echo "<li><a href=\"#\"><i class=\"fa fa-video-camera\"></i> Elapsed time : ".$key['time']."</a></li>";
 										}
 									}
 
