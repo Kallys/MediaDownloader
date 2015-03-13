@@ -20,6 +20,20 @@ class Downloader
 			return;
 		}
 
+		foreach ($this->urls as $url)
+		{
+			if(!$this->is_valid_url($url))
+			{
+				$this->errors[] = "\"".$url."\" is not a valid url !";
+			}
+		}
+
+		if(isset($this->errors) && count($this->errors) > 0)
+		{
+			$_SESSION['errors'] = $this->errors;
+			return;
+		}
+
 		if($this->config["max_dl"] == 0)
 		{
 			$this->do_download();
@@ -138,6 +152,11 @@ class Downloader
 	{
 		exec("which ".$this->config["extracter"], $out, $r);
 		return $r;
+	}
+
+	private function is_valid_url($url)
+	{
+		return filter_var($url, FILTER_VALIDATE_URL);
 	}
 
 	private function check_outuput_folder()
