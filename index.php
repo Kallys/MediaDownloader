@@ -87,7 +87,7 @@
 							<p><b>With which sites does it works ?</b></p>
 							<p><a href="http://rg3.github.io/youtube-dl/supportedsites.html">Here</a> is the list of the supported sites</p>
 							<p><b>How can I download the video on my computer ?</b></p>
-							<p>Go to <a href="./list.php">List of videos</a>, choose one, right click on the link and do "Save target as ..." </p>
+							<p>Go to <a href="./list.php?type=v">List of videos</a>, choose one, right click on the link and do "Save target as ..." </p>
 						</div>
 					</div>
 				</div>
