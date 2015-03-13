@@ -54,6 +54,54 @@ class Downloader
 		return $config["max_dl"];
 	}
 
+	public static function get_current_background_jobs()
+	{
+		exec("ps -A -o user,pid,etime,cmd | grep -v grep | grep youtube-dl", $output);
+
+		$bjs = [];
+		
+		if(count($output) > 0)
+		{
+			foreach($output as $line)
+			{
+				$line = explode(' ', preg_replace ("/ +/", " ", $line), 4);
+				$bjs[] = array(
+					'user' => $line[0],
+					'pid' => $line[1],
+					'time' => $line[2],
+					'cmd' => $line[3]
+					);
+			}
+
+			return $bjs;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public static function kill_them_all()
+	{
+		exec("ps -A -o pid,cmd | grep -v grep | grep youtube-dl | awk '{print $1}'", $output);
+
+		if(count($output) <= 0)
+			return;
+
+		foreach($output as $p)
+		{
+			shell_exec("kill ".$p);
+		}
+
+		$config = require dirname(__DIR__).'/config/config.php';
+		$folder = dirname(__DIR__).'/'.$config["outputFolder"].'/';
+
+		foreach(glob($folder.'*.part') as $file)
+		{
+			unlink($file);
+		}
+	}
+
 	private function check_requirements($audio_only)
 	{
 		if($this->is_youtubedl_installed() != 0)

@@ -1,7 +1,8 @@
 <?php
-	require 'class/Session.php';
-	$session = Session::getInstance();
+	require_once 'class/Session.php';
+	require_once 'class/Downloader.php';
 
+	$session = Session::getInstance();
 	$loginError = "";
 
 	if(isset($_POST["password"]))

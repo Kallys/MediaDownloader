@@ -1,10 +1,12 @@
 <?php
-	require 'class/Session.php';
-	require 'class/FileHandler.php';
-	require 'class/Downloader.php';
+	require_once 'class/Session.php';
+	require_once 'class/Downloader.php';
+	require_once 'class/FileHandler.php';
 
 	$session = Session::getInstance();
 	$file = new FileHandler;
+
+	require 'views/header.php';
 
 	if(!$session->is_logged_in())
 	{
@@ -12,6 +14,11 @@
 	}
 	else
 	{
+		if(isset($_GET['kill']) && !empty($_GET['kill']) && $_GET['kill'] === "all")
+		{
+			Downloader::kill_them_all();
+		}
+
 		if(isset($_POST['urls']) && !empty($_POST['urls']))
 		{
 			$audio_only = false;
@@ -25,19 +32,10 @@
 			
 			if(!isset($_SESSION['errors']))
 			{
-				if($audio_only)
-				{
-					header("Location: list.php?type=m");
-				}
-				else
-				{
-					header("Location: list.php?type=v");
-				}
+				header("Location: index.php");
 			}
 		}
 	}
-	
-	require 'views/header.php';
 ?>
 		<div class="container">
 			<br>
@@ -75,7 +73,6 @@
 					<div class="panel panel-info">
 						<div class="panel-heading"><h3 class="panel-title">Info</h3></div>
 						<div class="panel-body">
-							<p><b>Background downloads : <?php echo Downloader::background_jobs()." / ".Downloader::max_background_jobs() ?> </b></p>
 							<p>Free space : <?php echo $file->free_space(); ?></b></p>
 							<p>Download folder : <?php echo $file->get_downloads_folder(); ?></p>
 						</div>
