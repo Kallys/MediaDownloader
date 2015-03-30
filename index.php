@@ -38,8 +38,6 @@
 	}
 ?>
 		<div class="container">
-			<br>
-			<br>
 			<h1>Download</h1>
 			<?php
 

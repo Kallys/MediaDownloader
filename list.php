@@ -35,8 +35,6 @@
 	require 'views/header.php';
 ?>
 		<div class="container">
-		<br>
-		<br>
 		<?php
 			if(!empty($files))
 			{
@@ -67,6 +65,8 @@
 			?>
 				</tbody>
 			</table>
+			<br/>
+			<br/>
 		<?php
 			}
 			else
