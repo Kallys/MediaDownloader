@@ -11,7 +11,18 @@ class Downloader
 	public function __construct($post, $audio_only)
 	{
 		$this->config = require dirname(__DIR__).'/config/config.php';
-		$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
+
+		//this allows to use absolute paths see issue #13
+		if(strpos($this->config["outputFolder"],"/") === 0){
+
+			$this->download_path = $this->config["outputFolder"];
+
+		}else{
+
+			$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
+
+		}
+
 		$this->audio_only = $audio_only;
 		$this->urls = explode(",", $post);
 
