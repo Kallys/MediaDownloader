@@ -12,15 +12,14 @@ class Downloader
 	{
 		$this->config = require dirname(__DIR__).'/config/config.php';
 
-		//this allows to use absolute paths see issue #13
-		if(strpos($this->config["outputFolder"],"/") === 0){
-
+		//this allows to use absolute paths
+		if(strpos($this->config["outputFolder"], "/") === 0)
+		{
 			$this->download_path = $this->config["outputFolder"];
-
-		}else{
-
+		}
+		else
+		{
 			$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
-
 		}
 
 		$this->audio_only = $audio_only;
