@@ -34,8 +34,10 @@ Example (chosen password is root):
 
 ```
 $ echo -n root|md5sum
-63a9f0ea7bb98050796b649e85481845
+63a9f0ea7bb98050796b649e85481845  -
 ```
+
+The hash is `63a9f0ea7bb98050796b649e85481845`.
 
 ## CSS Theme
 [Lumen](https://bootswatch.com/lumen/)
