@@ -32,7 +32,9 @@ It supports simultaneous downloads in background.
 
 Example (chosen password is root):
 
-`echo -n root|md5sum`
+`$ echo -n root|md5sum
+63a9f0ea7bb98050796b649e85481845
+`
 
 ## CSS Theme
 [Lumen](https://bootswatch.com/lumen/)
