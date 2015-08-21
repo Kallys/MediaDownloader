@@ -202,7 +202,7 @@ class Downloader
 
 		foreach($this->urls as $url)
 		{
-			$cmd .= " ".$url;
+			$cmd .= " ".escapeshellarg($url);
 		}
 
 		$cmd .= " --restrict-filenames"; // --restrict-filenames is for specials chars
