@@ -20,7 +20,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="./">Download</a></li>
 					<li><a href="./list.php?type=v">List of videos</a></li>
-					<li><a href="./list.php?type=m">List of musics</a></li>
+					<li><a href="./list.php?type=m">List of songs</a></li>
 					<?php
 						if($session->is_logged_in())
 						{
