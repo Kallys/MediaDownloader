@@ -23,12 +23,19 @@ It supports simultaneous downloads in background.
 2. Edit config.php as you want it to work.
 3. Create the "videos" folder. 
 4. Check permissions.
-5. Access to index.php) to check that everything works.
+5. Load index.php to check that everything works.
 
 ## Set a password
 1. Open config/config.php
 2. Set security to true
 3. Find a password, hash it with md5 and replace the value of password.
+
+Example (chosen password is root):
+
+```
+echo -n root|md5sum| sed 's/ .*//'
+# Returns the hash 63a9f0ea7bb98050796b649e85481845
+```
 
 ## CSS Theme
 [Lumen](https://bootswatch.com/lumen/)

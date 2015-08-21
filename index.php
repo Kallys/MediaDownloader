@@ -53,7 +53,7 @@
 			<form id="download-form" class="form-horizontal" action="index.php" method="post">					
 				<div class="form-group">
 					<div class="col-md-10">
-						<input class="form-control" id="url" name="urls" placeholder="Link(s) separate with comma" type="text">
+						<input class="form-control" id="url" name="urls" placeholder="Link(s) separated by a comma" type="text">
 					</div>
 					<div class="col-md-2">
 						<div class="checkbox">
@@ -82,10 +82,10 @@
 						<div class="panel-body">
 							<p><b>How does it work ?</b></p>
 							<p>Simply paste your video link in the field and click "Download"</p>
-							<p><b>With which sites does it works ?</b></p>
-							<p><a href="http://rg3.github.io/youtube-dl/supportedsites.html">Here</a> is the list of the supported sites</p>
-							<p><b>How can I download the video on my computer ?</b></p>
-							<p>Go to <a href="./list.php?type=v">List of videos</a>, choose one, right click on the link and do "Save target as ..." </p>
+							<p><b>With which sites does it work?</b></p>
+							<p><a href="http://rg3.github.io/youtube-dl/supportedsites.html">Here's</a> a list of the supported sites</p>
+							<p><b>How can I download the video on my computer?</b></p>
+							<p>Go to <a href="./list.php?type=v">List of videos</a> -> choose one -> right click on the link -> "Save target as ..." </p>
 						</div>
 					</div>
 				</div>
