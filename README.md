@@ -30,6 +30,10 @@ It supports simultaneous downloads in background.
 2. Set security to true
 3. Find a password, hash it with md5 and replace the value of password.
 
+Example (chosen password is root):
+
+`echo -n root|md5sum`
+
 ## CSS Theme
 [Lumen](https://bootswatch.com/lumen/)
 
