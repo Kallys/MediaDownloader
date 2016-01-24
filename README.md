@@ -1,27 +1,28 @@
-# Youtube-dl WebUI
-
-![Main](https://github.com/p1rox/Youtube-dl-WebUI/raw/master/img/main.png)
-![List](https://github.com/p1rox/Youtube-dl-WebUI/raw/master/img/list.png)
+# Media Downloader
 
 ## Description
-Youtube-dl WebUI is a small web interface for youtube-dl. It allows you to host your own video downloader. 
+Media Downloader is a light web interface for [Youtube-dl](https://github.com/rg3/youtube-dl).
+By hosting your own media downloader, you, your friends and your familly are allowed to use youtube-dl to download music or video on the web without installing anything nor using a terminal.
+
+A lot of sites are supported (700+), including YouTube, dailymotion, Bandcamp, Facebook, SoundCloud, GoogleDrive, Imgur, Instagram, Vimeo, Vevo, twitch, Twitter... (a full list is available [here](http://rg3.github.io/youtube-dl/supportedsites.html)).
+
 After the download you can stream your videos from your web browser or save it on your computer directly from the list page.
 It supports simultaneous downloads in background.
 
-### You can now extract the audio of a video and download multiple videos at the same time !
+## News
+- You can now choose which quality and format to download. 
 
 ## Requirements
 - A web server (Apache or nginx)
-- PHP latest version should be fine.
+- PHP >= 5.4
 - Python 2.7 for Youtube-dl
 - [Youtube-dl](https://github.com/rg3/youtube-dl)
-- avconv or other is required for audio extraction (from youtube-dl doc) :
-`-x, --extract-audio convert video files to audio-only files (requires ffmpeg or avconv and ffprobe or avprobe)`
+- avconv or ffmpeg may be required for "Best Ever" quality (since it will merge both audio and video best available quality)
 
-## How to install ?
+## How to install?
 1. Clone this repo in your web folder (ex: /var/www).
 2. Edit config.php as you want it to work.
-3. Create the "videos" folder. 
+3. Create the "downloads" folder. 
 4. Check permissions.
 5. Load index.php to check that everything works.
 
@@ -40,24 +41,11 @@ echo -n root|md5sum| sed 's/ .*//'
 ## CSS Theme
 [Lumen](https://bootswatch.com/lumen/)
 
-## License
+## Screenshots
+![Main](https://github.com/Kallys/MediaDownloader/raw/master/img/main.png)
+![List](https://github.com/Kallys/MediaDownloader/raw/master/img/list.png)
 
-Copyright (c) 2014 Armand VIGNAT
+## Credits
+Thanks for p1rox's nice project "[Youtube-dl WebUI](https://github.com/p1rox/Youtube-dl-WebUI)" from which Media Downloader is forked.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Feel free to fork and contribute if you like this project!

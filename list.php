@@ -1,88 +1,82 @@
 <?php
-	require_once 'class/Session.php';
-	require_once 'class/Downloader.php';
-	require_once 'class/FileHandler.php';
 
-	$session = Session::getInstance();
-	$file = new FileHandler;
+require_once 'class/Session.php';
+require_once 'class/Downloader.php';
+require_once 'class/FileHandler.php';
 
-	if(!$session->is_logged_in())
+$session = Session::getInstance();
+if(!$session->is_logged_in())
+{
+	header("Location: login.php");
+}
+
+$file = new FileHandler;
+$files = $file->listFiles();
+
+if(isset($_POST["action"]) && !empty($_POST["action"]))
+{
+	if($_POST["action"] == "Delete")
 	{
-		header("Location: login.php");
+		$file->delete($_POST["cb_file"]);
 	}
+	header("Location: list.php");
+}
 
-	if(isset($_GET['type']) && !empty($_GET['type']))
-	{
-		$t = $_GET['type'];
-		if($t === 'v')
-		{
-			$type = "videos";
-			$files = $file->listVideos();
-		}
-		elseif($t === 'm')
-		{
-			$type = "musics";
-			$files = $file->listMusics();
-		}
-	}
+require 'views/header.php';
 
-	if($session->is_logged_in() && isset($_GET["delete"]))
-	{
-		$file->delete($_GET["delete"], $t);
-		header("Location: list.php?type=".$t);
-	}
-
-	require 'views/header.php';
 ?>
+		<script type="text/javascript" src="js/list.js"> </script>
+
 		<div class="container">
 		<?php
 			if(!empty($files))
 			{
 		?>
-			<h2>List of available <?php echo $type ?> :</h2>
-			<table class="table table-striped table-hover ">
-				<thead>
-					<tr>
-						<th style="min-width:800px; height:35px">Title</th>
-						<th style="min-width:80px">Size</th>
-						<th style="min-width:110px">Delete link</th>
-					</tr>
-				</thead>
-				<tbody>
+			<h2>List of downloaded files :</h2>
+			<p>Action to apply on selected files :</p>
+			<form action="list.php" method="post">
+				<input type="submit" class="btn btn-danger btn-sm" name="action" value="Delete" />
+				<table class="table table-striped table-hover ">
+					<thead>
+						<tr>
+							<th style="width:30px"><input type="checkbox" onClick="toggle(this);" /></th>
+							<th style="">Title</th>
+							<th style="width:80px">Size</th>
+						</tr>
+					</thead>
+					<tbody>
+					
 			<?php
 				$i = 0;
 				$totalSize = 0;
 
 				foreach($files as $f)
 				{
-					echo "<tr>";
-					echo "<td><a href=\"".$file->get_downloads_folder().'/'.$f["name"]."\" download>".$f["name"]."</a></td>";
-					echo "<td>".$f["size"]."</td>";
-					echo "<td><a href=\"./list.php?delete=$i&type=$t\" class=\"btn btn-danger btn-sm\">Delete</a></td>";
-					echo "</tr>";
+					echo "
+						<tr>
+							<td><input type=\"checkbox\" name=\"cb_file[]\" value=\"$i\" /></td>
+							<td><a href=\"".$file->get_downloads_folder().'/'.$f["name"]."\" download>".$f["name"]."</a></td>
+							<td>".$f["size"]."</td>
+						</tr>";
 					$i++;
 				}
 			?>
-				</tbody>
-			</table>
+			
+					</tbody>
+				</table>
+			</form>
 			<br/>
 			<br/>
 		<?php
 			}
 			else
 			{
-				if(isset($t) && ($t === 'v' || $t === 'm'))
-				{
-					echo "<br><div class=\"alert alert-warning\" role=\"alert\">No $type !</div>";
-				}
-				else
-				{
-					echo "<br><div class=\"alert alert-warning\" role=\"alert\">No such type !</div>";
-				}
+				echo "<br><div class=\"alert alert-warning\" role=\"alert\">No files found!</div>";
 			}
 		?>
 			<br/>
 		</div><!-- End container -->
+
 <?php
-	require 'views/footer.php';
+require 'views/footer.php';
 ?>

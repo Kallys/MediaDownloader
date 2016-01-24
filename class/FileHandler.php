@@ -1,87 +1,58 @@
 <?php
 
+require_once 'HumanReadable.php';
+
 class FileHandler
 {
 	private $config = [];
-	private $videos_ext = ".{avi,mp4,flv}";
-	private $musics_ext = ".{mp3,ogg,m4a}";
 
 	public function __construct()
 	{
 		$this->config = require dirname(__DIR__).'/config/config.php';
 	}
 
-	public function listVideos()
+	public function listFiles()
 	{
-		$videos = [];
+		$files = array();
 
-		if(!$this->outuput_folder_exists())
+		if(!$this->output_folder_exists())
 			return;
 
 		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
 
-		foreach(glob($folder.'*'.$this->videos_ext, GLOB_BRACE) as $file)
+		foreach(glob($folder.'*.*', GLOB_BRACE) as $filename)
 		{
-			$video = [];
-			$video["name"] = str_replace($folder, "", $file);
-			$video["size"] = $this->to_human_filesize(filesize($file));
-			
-			$videos[] = $video;
+			$files[] = array(
+				"name" => str_replace($folder, "", $filename),
+				"size" => HumanReadable::GetFileSize(filesize($filename))
+			);
 		}
-
-		return $videos;
+		
+		return $files;
 	}
 
-	public function listMusics()
-	{
-		$musics = [];
-
-		if(!$this->outuput_folder_exists())
-			return;
-
-		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
-
-		foreach(glob($folder.'*'.$this->musics_ext, GLOB_BRACE) as $file)
-		{
-			$music = [];
-			$music["name"] = str_replace($folder, "", $file);
-			$music["size"] = $this->to_human_filesize(filesize($file));
-			
-			$musics[] = $music;
-		}
-
-		return $musics;
-	}
-
-	public function delete($id, $type)
+	public function delete($ids)
 	{
 		$folder = dirname(__DIR__).'/'.$this->config["outputFolder"].'/';
 		$i = 0;
+		$files_to_remove = array();
 
-		if($type === 'v')
+		foreach(glob($folder.'*.*', GLOB_BRACE) as $file)
 		{
-			$exts = $this->videos_ext;
-		}
-		elseif($type === 'm')
-		{
-			$exts = $this->musics_ext;
-		}
-		else
-		{
-			return;
-		}
-
-		foreach(glob($folder.'*'.$exts, GLOB_BRACE) as $file)
-		{
-			if($i == $id)
+			if(in_array($i, $ids))
 			{
-				unlink($file);
+				$files_to_remove[] = $file;
 			}
 			$i++;
 		}
+		
+		foreach($files_to_remove as $file)
+		{
+			unlink($file);
+		}
 	}
 
-	private function outuput_folder_exists()
+	private function output_folder_exists()
 	{
 		if(!is_dir($this->config['outputFolder']))
 		{
@@ -95,16 +66,9 @@ class FileHandler
 		return true;
 	}
 
-	public function to_human_filesize($bytes, $decimals = 0)
-	{
-		$sz = 'BKMGTP';
-		$factor = floor((strlen($bytes) - 1) / 3);
-		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
-	}
-
 	public function free_space()
 	{
-		return $this->to_human_filesize(disk_free_space($this->config["outputFolder"]));
+		return HumanReadable::GetFileSize(disk_free_space($this->config["outputFolder"]));
 	}
 
 	public function get_downloads_folder()

@@ -49,6 +49,33 @@ class Session
 		}
 	}
 
+	public function set($key, $value)
+	{
+		if(!$this->is_logged_in())
+			return false;
+	
+		$_SESSION[$key] = $value;
+		return true;
+	}
+	
+	public function un_set($key)
+	{
+		if(!$this->is_logged_in() || !array_key_exists($key, $_SESSION))
+			return false;
+	
+		unset($_SESSION[$key]);
+		return true;
+	}
+	
+	public function load($key, &$value)
+	{
+		if(!$this->is_logged_in() || !array_key_exists($key, $_SESSION))
+			return false;
+		
+		$value = $_SESSION[$key];
+		return true;
+	}
+
 	public function is_logged_in()
 	{
 		return $_SESSION["logged_in"];

@@ -1,10 +1,11 @@
 		<footer class="footer">
             <div class="well text-center">
-                <p><a href="https://twitter.com/p1rox" target="_blank">@p1rox</a> - <a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Fork on Github</a></p>
+                <p>Based on <a href="https://rg3.github.io/youtube-dl/" target="_blank">Youtube-dl</a> - <a href="https://github.com/Kallys/MediaDownloader" target="_blank">Fork on Github</a></p>
             </div>
         </footer>
-        <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script type="text/javascript">
 		$(document).ready(function() {
     		$("#url").focus();

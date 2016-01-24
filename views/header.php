@@ -2,9 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Youtube-dl WebUI</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<title>Media Downloader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/lumen/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/main.css">
 	</head>
 	<body>
 		<div class="navbar navbar-default">
@@ -14,13 +16,12 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="">Youtube-dl WebUI</a>
+				<a class="navbar-brand" href="">Media Downloader</a>
 			</div>
 			<div class="navbar-collapse collapse navbar-responsive-collapse">
 				<ul class="nav navbar-nav">
 					<li><a href="./">Download</a></li>
-					<li><a href="./list.php?type=v">List of videos</a></li>
-					<li><a href="./list.php?type=m">List of songs</a></li>
+					<li><a href="./list.php">Files</a></li>
 					<?php
 						if($session->is_logged_in())
 						{
