@@ -1,5 +1,7 @@
 <?php
 
+namespace MediaDownloader;
+
 abstract class QualityEnum
 {
 	const Default_Quality = 0;

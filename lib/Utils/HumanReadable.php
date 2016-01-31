@@ -1,5 +1,7 @@
 <?php
 
+namespace MediaDownloader\Utils;
+
 abstract class HumanReadable
 {
 	private static $filesize = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');

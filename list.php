@@ -1,14 +1,7 @@
 <?php
 
-require_once 'class/Session.php';
-require_once 'class/Downloader.php';
-require_once 'class/FileHandler.php';
-
-$session = Session::getInstance();
-if(!$session->is_logged_in())
-{
-	header("Location: login.php");
-}
+namespace MediaDownloader;
+require_once 'init.php';
 
 $file = new FileHandler;
 $files = $file->listFiles();
@@ -22,14 +15,18 @@ if(isset($_POST["action"]) && !empty($_POST["action"]))
 	header("Location: list.php");
 }
 
-require 'views/header.php';
+Utils\Document::getInstance()->src_js[] = 'js/list.js';
+
+Views\Header::PrintView();
 
 ?>
-		<script type="text/javascript" src="js/list.js"> </script>
-
 		<div class="container">
 		<?php
-			if(!empty($files))
+			if(empty($files))
+			{
+				echo "<br><div class=\"alert alert-warning\" role=\"alert\">No files found!</div>";
+			}
+			else
 			{
 		?>
 			<h2>List of downloaded files :</h2>
@@ -55,7 +52,7 @@ require 'views/header.php';
 					echo "
 						<tr>
 							<td><input type=\"checkbox\" name=\"cb_file[]\" value=\"$i\" /></td>
-							<td><a href=\"".$file->get_downloads_folder().'/'.$f["name"]."\" download>".$f["name"]."</a></td>
+							<td><a href=\"".Utils\Config::Get('output_folder_url').$f["name"]."\">".$f["name"]."</a></td>
 							<td>".$f["size"]."</td>
 						</tr>";
 					$i++;
@@ -69,14 +66,10 @@ require 'views/header.php';
 			<br/>
 		<?php
 			}
-			else
-			{
-				echo "<br><div class=\"alert alert-warning\" role=\"alert\">No files found!</div>";
-			}
 		?>
 			<br/>
 		</div><!-- End container -->
 
 <?php
-require 'views/footer.php';
+Views\Footer::PrintView();
 ?>

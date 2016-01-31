@@ -1,8 +1,6 @@
 <?php
 
-require_once 'class/Session.php';
-require_once 'class/Format.php';
-require_once 'class/Media.php';
+namespace MediaDownloader;
 
 class Downloader
 {
@@ -10,26 +8,13 @@ class Downloader
 	public $format;// Output format
 	
 	private $urls = [];
-	private $config = [];
-	private $download_path = "";
+	private $download_mode = 'indirect';
 
-	public function __construct($post, $stream, $quality)
+	public function __construct($post, $stream, $quality, $download_mode)
 	{
-		$session = Session::getInstance();
-		
-		$this->config = require dirname(__DIR__).'/config/config.php';
-
-		//this allows to use absolute paths
-		if(strpos($this->config["outputFolder"], "/") === 0)
-		{
-			$this->download_path = $this->config["outputFolder"];
-		}
-		else
-		{
-			$this->download_path = dirname(__DIR__).'/'.$this->config["outputFolder"];
-		}
-
 		$this->format = new Format($stream, $quality);
+		$this->download_mode = $download_mode;
+
 		$this->check_requirements();
 		
 		$urls = array_unique(array_filter(array_map('trim', explode("\r\n", $post))));
@@ -38,7 +23,7 @@ class Downloader
 		{			
 			if(!$this->is_valid_url($url))
 			{
-				$_SESSION['errors'][] = "\"".$url."\" is not a valid url !";
+				$_SESSION['warnings'][] = "\"".$url."\" is not a valid url !";
 			}
 			else
 			{
@@ -46,16 +31,26 @@ class Downloader
 			}
 		}
 
-		if($this->IsManualFormatSelection())
+		if($this->NeedSelectionPage())
 		{
 			$this->load_infos();
-			$session->set('downloader', $this);
+			Utils\Session::getInstance()->set('downloader', $this);
 		}
+	}
+	
+	public function NeedSelectionPage()
+	{
+		return $this->IsManualFormatSelection() || $this->IsDirectDownloadMode();
 	}
 	
 	public function IsManualFormatSelection()
 	{
 		return $this->format->quality == QualityEnum::Manual;
+	}
+	
+	public function IsDirectDownloadMode()
+	{
+		return $this->download_mode == 'direct';
 	}
 
 	public static function background_jobs()
@@ -65,8 +60,7 @@ class Downloader
 
 	public static function max_background_jobs()
 	{
-		$config = require dirname(__DIR__).'/config/config.php';
-		return $config["max_dl"];
+		return Utils\Config::Get('max_dl');
 	}
 
 	public static function get_current_background_jobs()
@@ -108,10 +102,7 @@ class Downloader
 			shell_exec("kill ".$p);
 		}
 
-		$config = require dirname(__DIR__).'/config/config.php';
-		$folder = dirname(__DIR__).'/'.$config["outputFolder"].'/';
-
-		foreach(glob($folder.'*.part') as $file)
+		foreach(glob(Utils\Config::Get('output_folder').'*.part') as $file)
 		{
 			unlink($file);
 		}
@@ -126,23 +117,21 @@ class Downloader
 		{
 			if(!array_key_exists($video_index, $this->medias))
 			{
-				$_SESSION['errors'][] = "Internal error on video selection.";
+				Error::getInstance()->Warning("Internal error on video selection.");
 				continue;
 			}
 			
-			$this->do_download($this->medias[$video_index]->media_info->webpage_url, $choosen_formats[$video_index]);
+			$this->do_download($this->medias[$video_index]->data->webpage_url, $choosen_formats[$video_index]);
 		}
 	}
 	
 	private function check_requirements()
 	{
 		if(!$this->is_youtubedl_installed())
-			throw new Exception("Youtube-dl is not installed, see <a>https://rg3.github.io/youtube-dl/download.html</a> !");
+			throw new \Exception("Youtube-dl is not installed, see <a>https://rg3.github.io/youtube-dl/download.html</a> !");
 
-		$this->check_outuput_folder();
-
-		if($this->format->NeedPostProcess() && !$this->is_extracter_installed())
-			throw new Exception("Install an audio extracter (ex: avconv) !");
+		if($this->format->NeedPostProcess() && !$this->isPostProcessorInstalled())
+			throw new \Exception("Install an audio extracter (avconv or ffmpeg) !");
 	}
 
 	private function is_youtubedl_installed()
@@ -151,9 +140,9 @@ class Downloader
 		return $r == 0;
 	}
 
-	private function is_extracter_installed()
+	private function isPostProcessorInstalled()
 	{
-		exec("which ".$this->config["extracter"], $out, $r);
+		exec("which ".Utils\Config::Get('post_processor'), $out, $r);
 		return $r == 0;
 	}
 
@@ -162,27 +151,26 @@ class Downloader
 		return filter_var($url, FILTER_VALIDATE_URL);
 	}
 
-	private function check_outuput_folder()
+	private function get_post_processor()
 	{
-		//Folder doesn't exist
-		if(!is_dir($this->download_path))
+		switch(Utils\Config::Get('post_processor'))
 		{
-			if(!mkdir($this->download_path, 0775))
-				throw new Exception("Output folder doesn't exist and creation failed !");
+			case 'avconv':
+				return '--prefer-avconv';
+			
+			case 'ffmpeg':
+				return '--prefer-ffmpeg';
 		}
-		//Exists but can I write ?
-		else if(!is_writable($this->download_path))
-		{
-			throw new Exception("Output folder isn't writable !");
-		}
+		
+		throw new \Exception('Unsupported post-processor defined in config.php file. ('.Utils\Config::Get('post_processor').')');
 	}
 
 	public function download()
 	{
 		foreach($this->urls as $url)
 		{
-			if($this->config["max_dl"] > 0 && $this->background_jobs() >= $this->config["max_dl"])
-				throw new Exception("Simultaneous downloads limit reached !");
+			if(Utils\Config::Get('max_dl') > 0 && $this->background_jobs() >= Utils\Config::Get('max_dl'))
+				throw new \Exception("Simultaneous downloads limit reached !");
 
 			$this->do_download($url);
 		}
@@ -190,9 +178,8 @@ class Downloader
 	
 	private function do_download($url, $formats=array())
 	{
-		$cmd = "youtube-dl";
-		$cmd .= " --output ".$this->config["outputFolder"]."/";
-		$cmd .= escapeshellarg("%(title)s-%(uploader)s.%(ext)s");
+		$cmd = 'youtube-dl';
+		$cmd .= ' --output '.escapeshellarg(Utils\Config::Get('output_folder').'%(title)s-%(uploader)s.%(ext)s');
 	
 		if($this->IsManualFormatSelection())
 		{
@@ -200,7 +187,7 @@ class Downloader
 		}
 
 		if(!$this->format->GetFormatOption($format_option))
-			throw new Exception("No valid format has been set for video $url");
+			throw new \Exception("No valid format has been set for video $url");
 		
 		$cmd .= " ".$format_option;
 		$cmd .= " ".escapeshellarg($url);
@@ -215,17 +202,28 @@ class Downloader
 	{
 		$cmd_root = "youtube-dl";
 		$cmd_root .= " --dump-json";
-
+		$cmd_root .= " --get-format";
+		
+		if(!$this->IsManualFormatSelection())
+		{
+			if(!$this->format->GetFormatOption($format_option))
+				throw new \Exception("No valid format has been set for media $url");
+					
+			$cmd_root .= " ".$format_option;
+		}
+	
 		// Note: Each url has to be processed separately, otherwise, if one returns error, followings are ignored.
 		foreach($this->urls as $url)
 		{
 			$cmd = $cmd_root." ".escapeshellarg($url);
 			$result = shell_exec($cmd);
-			$json = json_decode($result);
+			$lines = explode(PHP_EOL, $result, 2);
+			$json = empty($lines[1]) ? null : json_decode($lines[1]);
 			
 			if(!empty($json))
 			{
-				$this->medias[md5($json->webpage_url)] = new Media($json);
+				$selected_format_name = $this->IsManualFormatSelection() ? null : $lines[0];
+				$this->medias[md5($json->webpage_url)] = new MediaInfo($json, $selected_format_name);
 			}
 			else
 			{

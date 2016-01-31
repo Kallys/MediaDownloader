@@ -1,109 +1,28 @@
 <?php
-	require_once 'class/Session.php';
-	require_once 'class/Downloader.php';
-	require_once 'class/FileHandler.php';
-	require_once 'class/Format.php';
-	require_once 'class/HumanReadable.php';
-	require_once 'class/Media.php';
-	require_once 'views/MediaFormatSelection.php';
-
-	$session = Session::getInstance();
-	$file = new FileHandler;
-
-	require 'views/header.php';
-	error_reporting(E_ALL);
-	ini_set("display_errors", 1);
-	if(!$session->is_logged_in())
+	namespace MediaDownloader;
+	require_once 'init.php';
+	
+	if(isset($_GET['kill']) && !empty($_GET['kill']) && $_GET['kill'] === "all")
 	{
-		header("Location: login.php");
+		Downloader::kill_them_all();
 	}
-	else
-	{
-		if(isset($_GET['kill']) && !empty($_GET['kill']) && $_GET['kill'] === "all")
-		{
-			Downloader::kill_them_all();
-		}
-		
-		if(isset($_POST['formats']) && !empty($_POST['formats']) && $session->load('downloader', $downloader))
-		{
-			try {
-				$downloader->downloadFormats(isset($_POST['formats']) ? $_POST['formats'] : null);
-				$session->un_set('downloader');
-				header("Location: index.php");
-			}
-			catch(Exception $e)
-			{
-				$_SESSION['errors'][] = $e->getMessage();
-			}
-		}
-		else if(isset($_POST['urls']) && !empty($_POST['urls']))
-		{
-			$stream = isset($_POST['stream']) ? $_POST['stream'] : null;
-			$quality = isset($_POST['quality']) ? $_POST['quality'] : null;
 
-			try {
-				$downloader = new Downloader($_POST['urls'], $stream, $quality);
-				
-				if(!$downloader->IsManualFormatSelection())
-				{
-					$downloader->download();
-					header("Location: index.php");
-				}
-			}
-			catch(Exception $e)
-			{
-				$_SESSION['errors'][] = $e->getMessage();
-			}
-		}
-	}
+	Utils\Document::getInstance()->src_js[] = 'js/index.js';
+	Utils\Document::getInstance()->need_jquery = true;
+	
+	Views\Header::PrintView();
 ?>
 		<div class="container">
 			<h1>Download</h1>
-			<?php
-
-				if(!empty($_SESSION['errors']))
-				{
-					foreach ($_SESSION['errors'] as $e)
-					{
-						echo "<div class=\"alert alert-danger\" role=\"alert\">$e</div>";
-					}
-				}
-				
-				if(!empty($_SESSION['warnings']))
-				{
-					foreach($_SESSION['warnings'] as $w)
-					{
-						echo "<div class=\"alert alert-warning\" role=\"alert\">$w</div>";
-					}
-				}
-
-			?>
 			
-<?php 
-if(isset($downloader) && $downloader->IsManualFormatSelection() && empty($_SESSION['errors']) && !empty($downloader->medias))
-{
-	echo '
-			<form id="download-form" class="form-horizontal" action="index.php" method="post">
-				<div class="form-group">';
-	
-	foreach($downloader->medias as $media)
-	{
-		MediaFormatSelection::PrintMediaFormatSelection($media);
-	}
-	
-	echo '
-				</div>
-				<button type="submit" class="btn btn-primary btn-block" style="margin:0 auto;">Download</button>
-			</form>
-';
-}
-else
-{
+<?php
+	Utils\Error::getInstance()->PrintErrors();
+	Utils\Error::getInstance()->PrintWarnings();
 ?>
-			<form id="download-form" class="form-horizontal" action="index.php" method="post">					
+			<form id="download-form" class="form-horizontal" action="download.php" method="post">					
 				<div class="form-group">
 					<div class="col-md-10">
-						<textarea class="form-control" id="url" name="urls" placeholder="One URL per line" rows="6"><?php echo empty($_POST['urls']) ? '' : $_POST['urls']; ?></textarea>
+						<textarea class="form-control" id="url" name="urls" placeholder="One URL per line" rows="6"><?php echo empty($_POST['urls']) ? 'https://www.youtube.com/watch?v=i90pCWPzABg' : $_POST['urls']; ?></textarea>
 					</div>
 					<div class="col-md-2">
 						<div class="list-group-item">
@@ -125,7 +44,8 @@ else
 						</div>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-primary">Download</button>
+				<button type="submit" class="btn btn-primary" name="download" value="indirect">Download</button>
+				<button type="submit" class="btn btn-default" name="download" value="direct">Direct Download</button>
 			</form>
 			<br>
 			<div class="row">
@@ -133,8 +53,8 @@ else
 					<div class="panel panel-info">
 						<div class="panel-heading"><h3 class="panel-title">Info</h3></div>
 						<div class="panel-body">
-							<p>Free space : <b><?php echo $file->free_space(); ?></b></p>
-							<p>Download folder : <?php echo $file->get_downloads_folder(); ?></p>
+							<p>Free space : <b><?php echo FileHandler::free_space(); ?></b></p>
+							<p>Download folder : <?php echo Utils\Config::Get('output_folder_url'); ?></p>
 						</div>
 					</div>
 				</div>
@@ -152,12 +72,8 @@ else
 					</div>
 				</div>
 			</div>
-<?php
-}
-?>
 		</div>
+
 <?php
-	unset($_SESSION['errors']);
-	unset($_SESSION['warnings']);
-	require 'views/footer.php';
+	Views\Footer::PrintView();
 ?>
