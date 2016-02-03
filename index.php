@@ -22,7 +22,7 @@
 			<form id="download-form" class="form-horizontal" action="download.php" method="post">					
 				<div class="form-group">
 					<div class="col-md-10">
-						<textarea class="form-control" id="url" name="urls" placeholder="One URL per line" rows="6"><?php echo empty($_POST['urls']) ? 'https://www.youtube.com/watch?v=i90pCWPzABg' : $_POST['urls']; ?></textarea>
+						<textarea class="form-control" id="url" name="urls" placeholder="One URL per line" rows="6"><?php echo empty($_POST['urls']) ? '' : $_POST['urls']; ?></textarea>
 					</div>
 					<div class="col-md-2">
 						<div class="list-group-item">
