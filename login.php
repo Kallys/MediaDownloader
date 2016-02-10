@@ -3,6 +3,11 @@
 namespace MediaDownloader;
 require_once 'init.php';
 
+if (Utils\Session::is_passwordless()){
+        header("Location: index.php");
+        exit(0);
+}
+
 $loginFailed = false;
 
 if(isset($_POST["password"]))

@@ -70,8 +70,11 @@ abstract class Header
 						</ul>
 					</li>
 				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="./logout.php">Logout</a></li>
+				<ul class="nav navbar-nav navbar-right">';
+			if(! Session::is_passwordless()) 
+				echo '<li><a href="./logout.php">Logout</a></li>';  
+                        
+			echo '
 				</ul>
 			</div>';
 		}
