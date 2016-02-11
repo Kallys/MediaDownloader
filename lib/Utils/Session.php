@@ -33,6 +33,10 @@ class Session
 		return self::$_instance;
 	}
 
+	public static function is_passwordless(){
+		return ! Config::Get('security') ;
+	}
+
 	public function login($password)
 	{
 		if(Config::Get('password') === md5($password))
