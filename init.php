@@ -54,26 +54,29 @@ spl_autoload_register(function ($class)
 		require $manual[$class];
 });
 
-if(!Utils\Session::getInstance()->is_logged_in() && Utils\Config::GetInstance()->GetRequestPage() != 'login.php')
+if(Utils\Config::GetInstance()->GetRequestPage() != 'login.php')
 {
-	header("Location: login.php");
-	exit(0);
-}
-
-try
-{
-	Utils\Config::GetInstance()->Check();
-}
-catch(\Exception $e)
-{
-	$requestPage = Utils\Config::GetInstance()->GetRequestPage();
-	if(!empty($requestPage) && $requestPage !== 'index.php')
+	if(!Utils\Session::getInstance()->is_logged_in())
 	{
-		header("Location: index.php");
+		header("Location: login.php");
 		exit(0);
 	}
 	
-	Utils\Error::getInstance()->Error($e->getMessage());
+	try
+	{
+		Utils\Config::GetInstance()->Check();
+	}
+	catch(\Exception $e)
+	{
+		$requestPage = Utils\Config::GetInstance()->GetRequestPage();
+		if(!empty($requestPage) && $requestPage !== 'index.php')
+		{
+			header("Location: index.php");
+			exit(0);
+		}
+		
+		Utils\Error::getInstance()->Error($e->getMessage());
+	}
 }
 
 ?>
