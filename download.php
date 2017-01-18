@@ -4,12 +4,13 @@ namespace MediaDownloader;
 require_once 'init.php';
 
 use \MediaDownloader\Utils\Error;
+use \MediaDownloader\Utils\Session;
 
-if(isset($_POST['formats']) && !empty($_POST['formats']) && $session->load('downloader', $downloader))
+if(isset($_POST['formats']) && !empty($_POST['formats']) && Session::getInstance()->load('downloader', $downloader))
 {
 	try {
 		$downloader->downloadFormats(isset($_POST['formats']) ? $_POST['formats'] : null);
-		$session->un_set('downloader');
+		Session::getInstance()->un_set('downloader');
 		header("Location: index.php");
 	}
 	catch(\Exception $e)
