@@ -1,0 +1,31 @@
+{
+    "name": "kallys/MediaDownloader",
+    "description": "WebUI for youtube-dl and more!",
+    "type": "project",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Kallys",
+            "email": "kallys@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+	"config":
+	{
+        "vendor-dir": "sources/lib/composer"
+	},
+    "require": {
+        "bcosca/fatfree-core": "^3.5",
+		"respect/validation": "^1.1",
+		"nategood/commando": "^0.2.9"
+    },
+	"require-dev": {
+		"maximebf/debugbar": "^1.13",
+		"thomaspark/bootswatch": "^3.3"
+	},
+	"autoload": {
+		"classmap": [
+			"sources/app/"
+		]
+	}
+}

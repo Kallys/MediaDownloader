@@ -1,0 +1,156 @@
+<include href="header.htm" /> 
+
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h3 class="panel-title">Administration</h3></div>
+		<div class="panel-body">
+			<form method="post">
+				<set has_success="{{ @VERB == 'POST' ? 'has-success' : '' }}">
+				<fieldset>
+					<legend>Download settings</legend>
+					<div class="form-group {{ empty(@View.Validation.download_path) ? @has_success : 'has-error' }}">
+						<label for="download_path" class="control-label">Download path</label>
+						<input type="text" class="form-control" id="download_path" name="download_path" value="{{@View.Config.download_path}}">
+						<span class="help-block">Path on this server where media will be downloaded to.</span>
+						<check if="{{ !empty(@View.Validation.download_path) }}">
+							<span class="help-block"><b>Validation failed with theses messages:</b></span>
+							<ul class="help-block">
+								<repeat group="{{@View.Validation.download_path}}" value="{{@value}}">
+									<li>{{@value}}</li>
+								</repeat>
+							</ul>
+						</check>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.max_simultaneous) ? @has_success : 'has-error' }}">
+							<label for="max_simultaneous" class="control-label">Maximum simultaneous</label>
+							<input type="number" class="form-control" id="max_simultaneous" name="max_simultaneous" value="{{@View.Config.max_simultaneous}}" min="0">
+							<span class="help-block">Maximal limit of simultaneous downloads. Set to 0 to disable this limit.</span>
+							<check if="{{ !empty(@View.Validation.max_simultaneous) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.max_simultaneous}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.max_concurrents) ? @has_success : 'has-error' }}">
+							<label for="max_concurrents" class="control-label">Maximum concurrents</label>
+							<input type="number" class="form-control" id="max_concurrents" name="max_concurrents" value="{{@View.Config.max_concurrents}}" min="0">
+							<span class="help-block">Maximal limit of downloads with same origin. Set to 0 to disable this limit.</span>
+							<check if="{{ !empty(@View.Validation.max_concurrents) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.max_concurrents}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.default_quality) ? @has_success : 'has-error' }}">
+							<label for="default_quality" class="control-label">Default quality</label>
+							<select name="default_quality" class="form-control">
+								<repeat group="{{@LANG.FormatQuality}}" key="{{@value}}" value="{{@name}}">
+									<option value="{{@value}}" {{@View.Config.default_quality == @value ? 'selected' : ''}}>{{@name}}</option>
+								</repeat>
+							</select>
+							<span class="help-block">Default quality selected value when adding links.</span>
+							<check if="{{ !empty(@View.Validation.default_quality) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.default_quality}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.default_stream) ? @has_success : 'has-error' }}">
+							<label for="default_stream" class="control-label">Default stream</label>
+							<select name="default_stream" class="form-control">
+								<repeat group="{{@LANG.FormatStream}}" key="{{@value}}" value="{{@name}}">
+									<option value="{{@value}}" {{@View.Config.default_stream == @value ? 'selected' : ''}}>{{@name}}</option>
+								</repeat>
+							</select>
+							<span class="help-block">Default stream selected value when adding links.</span>
+							<check if="{{ !empty(@View.Validation.default_stream) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.default_stream}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+					</div>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Youtube-dl settings</legend>
+					<div class="form-group {{ empty(@View.Validation.youtubedl_path) ? @has_success : 'has-error' }}">
+						<label for="youtubedl_path" class="control-label">Youtube-dl path</label>
+						<input type="text" class="form-control" id="youtubedl_path" name="youtubedl_path" value="{{@View.Config.youtubedl_path}}">
+						<span class="help-block">Path to youtube-dl binary.</span>
+						<check if="{{ !empty(@View.Validation.youtubedl_path) }}">
+							<span class="help-block"><b>Validation failed with theses messages:</b></span>
+							<ul class="help-block">
+								<repeat group="{{@View.Validation.youtubedl_path}}" value="{{@value}}">
+									<li>{{@value}}</li>
+								</repeat>
+							</ul>
+						</check>
+					</div>
+				</fieldset>
+				
+				<fieldset>
+					<legend>App settings</legend>
+					<div class="row">
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.debug_level) ? @has_success : 'has-error' }}">
+							<label for="debug_level" class="control-label">Debug level</label>
+							<input type="number" class="form-control" id="debug_level" name="debug_level" value="{{@View.Config.debug_level}}" min="0" max="3">
+							<span class="help-block">Verbosity level of debug informations.</span>
+							<check if="{{ !empty(@View.Validation.debug_level) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.debug_level}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+						<div class="checkbox col-sm-6 {{ empty(@View.Validation.cache) ? @has_success : 'has-error' }}">
+							<label>
+								<input type="checkbox" class="form-control" id="cache" name="cache" {{@View.Config.cache ? 'checked' : ''}}> Enable cache
+								<span class="help-block">Enable server caching system.</span>
+							</label>
+							<check if="{{ !empty(@View.Validation.cache) }}">
+								<span class="help-block"><b>Validation failed with theses messages:</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.cache}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+					</div>
+				</fieldset>
+				
+				<div class="text-center">
+					<check if="{{ empty(@View.Validation) }}">
+						<true>
+							<button type="reset" class="btn btn-default">Reset</button>
+						</true>
+						<false>
+							<a href="{{@REALM}}" class="btn btn-default">Reset</a>
+						</false>
+					</check>
+					<button type="submit" class="btn btn-primary">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<include href="footer.htm" />

@@ -1,0 +1,15 @@
+<div class="panel panel-info">
+	<div class="panel-heading"><h3 class="panel-title">Server infos</h3></div>
+	<div class="panel-body">
+		<dl class="dl-horizontal">
+			<dt>Downloading</dt>
+			<dd>{{\App\Models\Downloads::instance()->CountByState(\App\Models\Objects\Download::State_Downloading)}} download(s)</dd>
+			<dt>Max. simultaneous</dt>
+			<dd>{{\App\Models\Config::Get('max_simultaneous')}} download(s)</dd>
+			<dt>Max. concurrents</dt>
+			<dd>{{\App\Models\Config::Get('max_concurrents')}} download(s)</dd>
+			<dt>Free space<dt>
+			<dd>{{\App\Lib\Utils::GetOutputFreeSpace()}}</dd>
+		</dl>
+	</div>
+</div>
