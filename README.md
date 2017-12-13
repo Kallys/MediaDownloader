@@ -39,9 +39,9 @@ Optional:
 [Lumen](https://bootswatch.com/lumen/)
 
 ## Screenshots
-![Home page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/img/home.jpg)
-![Links page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/img/links.jpg)
-![List page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/img/list.jpg)
-![Admin page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/img/admin.jpg)
+![Home page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/public/img/home.jpg)
+![Links page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/public/img/links.jpg)
+![List page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/public/img/list.jpg)
+![Admin page screenshot](https://github.com/Kallys/MediaDownloader/raw/dev/public/img/admin.jpg)
 
 Feel free to fork and contribute if you like this project!
