@@ -45,61 +45,7 @@ class Links extends Controller
 				}
 			}
 		}
-		/*
-		 \App\Lib\Session::instance()->Clear('medias_to_download');
-		 $urls = array_unique(array_filter(array_map('trim', explode("\r\n", $data['urls']))));
 
-		 $all_media = [];
-		 $error_urls = [];
-		 foreach($urls as $url)
-		 {
-		 if(is_null($media = \App\Models\Media::instance()->GetByUrl($url)))
-		 {
-		 try {
-		 $media = \App\Models\Media::instance()->New($url);
-		 }
-		 catch(\App\Models\Ex_InvalidURL $e)
-		 {
-		 $error_urls[] = $url;
-		 continue;
-		 }
-		 }
-		 $all_media[] = $media;
-		 }
-
-		 if(empty($all_media))
-		 {
-		 Alerter::Error('<b>Any of the following given urls are valid:</b><br>- ' . implode('<br>- ', $error_urls), 'No valid link!');
-		 }
-		 else
-		 {
-		 // Need selection page
-		 if($data['quality'] == YoutubeDl::QUALITY_MANUAL)
-		 {
-		 $media_ids = [];
-		 foreach($all_media as $media)
-		 {
-		 $media_ids[] = $media->_id;
-		 }
-
-		 // Store medias to session
-		 if(count($media_ids) > 1)
-		 {
-		 \App\Lib\Session::instance()->Set('medias_to_download', $media_ids);
-		 }
-
-		 // Reroute to first media
-		 $f3->reroute($f3->alias('link', ['media_id' => $media_ids[0]]));
-		 }
-		 else
-		 {
-		 // TODO : error catching on bad url !
-		 foreach($all_media as $media)
-		 {
-		 $media->Download($media->QueryFormat($data['quality'], $data['stream']));
-		 }
-		 }
-		 }*/
 		return $this->Get($f3, $routes);
 	}
 
@@ -132,7 +78,6 @@ class Links extends Controller
 		echo \Template::instance()->render('links-browse.html');
 	}
 
-	// TODO : error catching on bad url !
 	private function DownloadLinks(\Base $f3, array $urls, int $quality, int $stream)
 	{
 		$result = [];
@@ -179,6 +124,9 @@ class Links extends Controller
 		}
 
 		$f3->set('View.Result', $result);
+
+		// Update Manager in order to start downloads
+		\App\Lib\DownloadsManager::Update();
 
 		echo \Template::instance()->render('links-download.html');
 	}
