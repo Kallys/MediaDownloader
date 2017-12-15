@@ -76,6 +76,8 @@ abstract class YoutubeDl
 		$cmd .= ' --format ' . $download->format_id;
 		$cmd .= ' --no-cache-dir'; // We support our own caching method
 		$cmd .= ' --newline'; // Needed in order to read downloading infos
+		$cmd .= ' ' . escapeshellarg(Config::Get('youtubedl_args'));
+
 		$command = new Command($cmd, $download->GetLogFilePath(), $download->GetErrorFilePath());
 
 		$cmd_on_success = DIR_BASE . 'mdc downloads ' . $download->_id . ' --state ' . Download::State_Finished;

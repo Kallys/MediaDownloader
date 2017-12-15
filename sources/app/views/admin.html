@@ -102,6 +102,19 @@
 							</ul>
 						</check>
 					</div>
+					<div class="form-group {{ empty(@View.Validation.youtubedl_path) ? @has_success : 'has-error' }}">
+						<label for="youtubedl_args" class="control-label">Youtube-dl extra arguments</label>
+						<input type="text" class="form-control" id="youtubedl_args" name="youtubedl_args" value="{{@View.Config.youtubedl_args}}">
+						<span class="help-block">Extra arguments added to youtube-dl download command.</span>
+						<check if="{{ !empty(@View.Validation.youtubedl_args) }}">
+							<span class="help-block"><b>Validation failed with theses messages:</b></span>
+							<ul class="help-block">
+								<repeat group="{{@View.Validation.youtubedl_args}}" value="{{@value}}">
+									<li>{{@value}}</li>
+								</repeat>
+							</ul>
+						</check>
+					</div>
 				</fieldset>
 				
 				<fieldset>

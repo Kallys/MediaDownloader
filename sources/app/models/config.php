@@ -25,6 +25,7 @@ class Config extends Model
 									->key('download_path', Validator::stringType()->directory()->readable()->writable())
 									->key('max_concurrents', Validator::intType()->between(0))
 									->key('max_simultaneous', Validator::intType()->between(0))
+									->key('youtubedl_args', Validator::stringType())
 									->key('youtubedl_path', Validator::stringType()->file()->readable()->executable()->YoutubeDl())
 		;
 
@@ -41,6 +42,7 @@ class Config extends Model
 		$this->mapper->download_path	= \App\DIR_PUBLIC_DONWLOADS;
 		$this->mapper->max_concurrents	= 1;
 		$this->mapper->max_simultaneous	= 3;
+		$this->mapper->youtubedl_args	= '';
 		$this->mapper->youtubedl_path	= '/usr/local/bin/youtube-dl';
 		$this->mapper->save();
 	}

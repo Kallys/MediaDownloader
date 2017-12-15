@@ -25,7 +25,8 @@ class Admin extends Controller
 					'download_path'		=> rtrim($post['download_path'], '/') . '/',
 					'max_concurrents'	=> intval($post['max_concurrents']),
 					'max_simultaneous'	=> intval($post['max_simultaneous']),
-					'youtubedl_path'	=> $post['youtubedl_path']
+					'youtubedl_args'	=> trim($post['youtubedl_args']),
+					'youtubedl_path'	=> trim($post['youtubedl_path'])
 				]);
 			}
 			catch(\Respect\Validation\Exceptions\NestedValidationException $e)
