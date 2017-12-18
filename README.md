@@ -11,32 +11,23 @@ Media Downloader supports simultaneous downloads in background and now allows yo
 
 ## News
 - Queuing downloads
+- Integration with FatFree Framework and composer
+- Web installer
 - New administration page
 - New design
 
 ## Requirements
-- A web server
-- Composer
+Required:
+- Web server
+- [Composer](https://getcomposer.org/)
 - PHP >= 7
-- Python 2.7 for Youtube-dl
 - [Youtube-dl](https://github.com/rg3/youtube-dl)
 
 Optional:
 - avconv or ffmpeg (required for "Best Ever" quality since it will merge both audio and video best available quality)
 
 ## How to install?
-1. Clone this repo in your web folder (ex: /var/www).
-2. Run composer install inside the cloned folder
-3. Check permissions 
-  - everything must be readable for www user
-  - temp/, resources/databases, resources/logs/, resources/sessions/, public/downloads/ must be readable for www user
-4. Double check permissions!
-5. Adapt public/.htaccess to your configuration (subfolder or subdomain)
-6. Do your web server configuration
-7. Go to your page using a web browser and follow web installation !
-
-## CSS Theme
-[Lumen](https://bootswatch.com/lumen/)
+Follow instructions on [dedicated wiki page](https://github.com/Kallys/MediaDownloader/wiki/Installation).
 
 ## Screenshots
 ### Home page
