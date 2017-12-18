@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="{{@ENCODING}}">
+		<title>Media Downloader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="{{@URL_BASE}}/css/gfonts.css">
+		<link rel="stylesheet" href="{{@URL_BASE}}/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{@URL_BASE}}/css/font-awesome.min.css">
+		<link rel="stylesheet" href="{{@URL_BASE}}/css/main.css">
+		
+		<check if="{{ @DEBUG > 1 }}">
+			<link rel="stylesheet" href="{{@URL_BASE}}/css/code.css" type="text/css">
+			{{ \App\Lib\Debugger::instance()->RenderHead() }}
+		</check>
+		
+		<script type="text/javascript" src="{{@URL_BASE}}/js/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="{{@URL_BASE}}/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="navbar navbar-default">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{{@URL_BASE}}">Media Downloader</a>
+			</div>
+			
+			<check if="{{\App\Lib\SignedInUser::IsUserSignedIn()}}">
+				<div class="navbar-collapse collapse navbar-responsive-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="{{@URL_BASE}}{{'links' | alias}}">Add links</a></li>
+						<li><a href="{{@URL_BASE}}{{'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias}}">Media list</a></li>
+						<exclude>
+							<li><a href="{{@URL_BASE}}{{'downloads' | alias}}">Downloads <check if="\App\Lib\Downloader::background_jobs() > 0"><span class="badge">{{\App\Lib\Downloader::background_jobs()}}</span></check></a></li>
+							<li><a href="{{@URL_BASE}}{{'search' | alias}}">Search</a></li>
+							<li><a href="{{@URL_BASE}}{{'browse' | alias}}">Browse</a></li>
+						</exclude>
+					</ul>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="{{@URL_BASE}}{{'admin' | alias}}">Admin</a></li>
+						<li><a href="{{@URL_BASE}}{{'logout' | alias}}">Logout</a></li>
+					</ul>
+				</div>
+			</check>
+			
+		</div>
+
+		<div class="container">
+			<repeat group="{{\App\Lib\Alerter::GetMessages()}}" value="{{@alert}}">
+				<div class="alert alert-dismissible alert-{{@alert.type}}" role="alert">
+				 	<button type="button" class="close" data-dismiss="alert">&times;</button>
+				 	<check if="{{@alert.title}}"><h4>{{@alert.title}}</h4></check>
+					<p>{{@alert.message}}</p>
+				</div>
+			</repeat>
+		</div>

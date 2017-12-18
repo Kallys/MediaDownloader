@@ -1,0 +1,173 @@
+<check if="{{ !is_null(@View.NoInfo) }}">
+	<true>
+		<div class="panel panel-danger">
+			<div class="panel-heading"><h3 class="panel-title">No media informations</h3></div>
+			<div class="panel-body">
+				<p><b>Unable to load informations for url:</b></p>
+				<p class="text-center"><a href="{{@View.Media->url}}" target="_blank">{{@View.Urls[@View.UrlIndex]}}</a></p>
+				<p>Common errors to check:</p>
+				<ul>
+					<li>typo in url</li>
+					<li>server has no internet access</li>
+					<li>youtube-dl does not support this provider</li>
+					<li>provider is down or blacklisted your server</li>
+				</ul>
+				<br>
+				<div class="list-group-item">
+			  		<h4 class="list-group-item-heading">Error detail:</h4>
+			  		<p class="list-group-item-text" style="overflow:auto; white-space: pre-line;">{{is_array(@View.NoInfo) ? implode(PHP_EOL, @View.NoInfo) : @View.NoInfo}}</p>
+				</div>
+			</div>
+		</div>
+	</true>
+	<false>
+		<div class="modal" id="downloadModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+						<h4 class="modal-title">Download to your computer</h4>
+					</div>
+					<div class="modal-body">
+						<label for="filename">Suggested file name:</label>
+						<input type="text" style="width:100%;" name="filename" readonly value="{{@View.Media->GetFilename()}}" />
+						<h4>To download:</h4>
+						<ol>
+							<li>Click on suggested file name field above</li>
+							<li>Copy the content (CTRL+C or right-click > copy)</li>
+							<li>Right-click on the "Download" button and choose "Save target as..."</li>
+							<li>Paste the suggested filename previously copied (CTRL+V or right-click > paste)</li>
+							<li>Download!</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<a id="download-link" href="" download class="btn btn-primary">Download Link</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="panel panel-info">
+			<div class="panel-heading"><h3 class="panel-title">Select formats to download</h3></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="list-group-item" style="text-align: center; text-transform: uppercase;">
+							<a href="{{@View.Media->url}}" style="text-decoration:none;" target="_blank">
+								<img class="h1" src="{{@View.Media->thumbnail}}" alt="{{@View.Media->extractor_key}}" style="max-width: 100%; height: auto; line-height:2em; margin-top:0; margin-bottom:0;" />
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<dl class="dl-horizontal">
+							<dt>Title</dt>
+							<dd><a href="{{@View.Media->url}}" target="_blank">{{@View.Media->GetTitle() ?: '-' }}</a></dd>
+							<dt>Creator</dt>
+							<dd>{{@View.Media->creator ?: '-' }}</dd>
+							<dt>Uploader</dt>
+							<dd>
+								<check if="{{empty(@View.Media->uploader_url)}}">
+									<true>{{@View.Media->uploader ?: '-' }}</true>
+									<false><a href="{{@View.Media->uploader_url}}" target="_blank">{{@View.Media->uploader ?: '-' }}</a></false>
+								</check>
+							</dd>
+							<dt>Categories</dt>
+							<dd>{{ is_array(@View.Media->categories) ? implode(', ', @View.Media->categories) : '-' }}</dd>
+							<dt>License</dt>
+							<dd>{{@View.Media->license ?: '-' }}</dd>
+						</dl>
+					</div>
+					<div class="col-sm-3">
+						<dl class="dl-horizontal">
+							<dt>Duration</dt>
+							<dd>{{ is_null(@View.Media->duration) ? '-' : gmdate("H:i:s", @View.Media->duration) }}</dd>
+							<dt>Upload date</dt>
+							<dd>{{ is_null(@View.Media->upload_date) ? '-' : date("Y-m-d", strtotime(@View.Media->upload_date)) }}</dd>
+							<dt>Like count</dt>
+							<dd>{{ is_null(@View.Media->like_count) ? '-' : \App\Lib\Human::GetFactor(@View.Media->like_count) }}</dd>
+							<dt>View count</dt>
+							<dd>{{ is_null(@View.Media->view_count) ? '-' : \App\Lib\Human::GetFactor(@View.Media->view_count) }}</dd>
+							<dt>Dislike count</dt>
+							<dd>{{ is_null(@View.Media->dislike_count) ? '-' : \App\Lib\Human::GetFactor(@View.Media->dislike_count) }}</dd>
+							<dt>Age limit</dt>
+							<dd>{{is_null(@View.Media->age_limit) ? '-' : @View.Media->age_limit}}</dd>
+						</dl>
+					</div>
+				</div>
+				<check if="{{!empty(@View.Media->description)}}">
+					<div class="list-group-item">
+				  		<h4 class="list-group-item-heading">Description</h4>
+				  		<p class="list-group-item-text" style="max-height:145px; overflow:auto; white-space: pre-line;">{{@View.Media->description}}</p>
+					</div>
+				</check>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Format</th>
+							<th>Extension</th>
+							<th>Filesize</th>
+							<th>Resolution</th>
+							<th>Video codec</th>
+							<th>Audio codec</th>
+							<th>FPS</th>
+							<th>TBR</th>
+							<th>ABR</th>
+							<th>Download</th>
+						</tr>
+					</thead>
+					<tbody>
+						<repeat group="{{@View.Media->GetFormatsInfos()}}" value="{{@formatInfo}}">
+							<set alreadyDownloaded="{{ !is_null(@View.Media->GetDownloadByFormatId(@formatInfo->GetFormatId())) }}" />
+							<tr {{ @alreadyDownloaded ? 'class="info"' : '' }}>
+								<td>
+									<span class="glyphicon glyphicon-film {{ @formatInfo->HasVideoStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @formatInfo->HasVideoStream() ? 'Contains a video stream' : 'No video stream' }}"></span>
+									<span class="glyphicon glyphicon-music {{ @formatInfo->HasAudioStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @formatInfo->HasAudioStream() ? 'Contains an audio stream' : 'No audio stream' }}"></span>
+								</td>
+								<td>{{@formatInfo->GetFormatName()}}</td>
+								<td>{{@formatInfo->GetExtension()}}</td>
+								<td>{{@formatInfo->GetFileSize()}}</td>
+								<td>{{@formatInfo->GetResolution()}}</td>
+								<td>{{@formatInfo->GetVideoCodec()}}</td>
+								<td>{{@formatInfo->GetAudioCodec()}}</td>
+								<td>{{@formatInfo->GetFPS()}}</td>
+								<td>{{@formatInfo->GetTBR()}}</td>
+								<td>{{@formatInfo->GetABR()}}</td>
+								<td>
+									<button class="btn btn-sm btn-primary server-download" title="Download to server" data-mediaid="{{@View.Media->id}}" data-formatid="{{@formatInfo->GetFormatId()}}" {{ @alreadyDownloaded ? 'disabled="disabled"' : '' }}>
+										<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+									</button>
+									<button title="Download to my computer" data-toggle="modal" data-formaturl="{{@formatInfo->GetUrl()}}" data-filename="{{@View.Media->GetFilename()}}.{{@formatInfo->GetExtension()}}" data-target="#downloadModal" class="btn btn-sm btn-default">
+										<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+									</button>
+								</td>
+							</tr>
+						</repeat>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</false>
+</check>
+
+<script>
+	// Download to my computer (modal)
+	$('#downloadModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		modal.find('.modal-body input').val(button.data('filename'))
+		modal.find('#download-link').attr('href', button.data('formaturl'))
+	})
+	
+	// Download to server
+	$('.server-download').each(function () {
+		var $this = $(this);
+		$this.on('click', function () {
+			$.post("{{@URL_BASE}}{{ 'link', ['media_id' => @View.Media->_id] | alias }}", { 'format_id': $(this).data('formatid') })
+				.done(function(data) {
+					console.log( "Data Loaded: " + data );
+				});
+		})
+	})
+</script>

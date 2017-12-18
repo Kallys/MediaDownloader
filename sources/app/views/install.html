@@ -1,0 +1,102 @@
+<include href="header.htm" /> 
+
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h3 class="panel-title">Installation</h3></div>
+		<div class="panel-body">
+			<form method="post" class="form-horizontal">
+				<set has_success="{{ @VERB == 'POST' ? 'has-success' : '' }}">
+				<fieldset>
+					<legend>Requirements</legend>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<repeat group="{{@View.Requirements.Values}}" value="{{@value}}" key="{{@name}}">
+								<set failure="{{ array_key_exists(@name, @View.Requirements.Validation) }}" />
+								<tr class="text-{{ @failure ? 'danger' : 'success' }}">
+									<td>{{@name}}</td>
+									<td>{{@value}}</td>
+									<td>
+										<check if="{{ @failure }}">
+											<true>{{ is_array(@View.Requirements.Validation[@name]) ? implode('<br>', @View.Requirements.Validation[@name]) : @View.Requirements.Validation[@name] }}</true>
+											<false><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></false>
+										</check>
+									</td>
+								</tr>
+							</repeat>
+						</tbody>
+					</table>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Administrator</legend>
+					<p class="help-block">Administrator is a super user in charge of setting up this server.</p>
+					<div class="form-group {{ empty(@View.Form.Validation.name) ? @has_success : 'has-error' }}">
+						<label for="admin-name" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="admin-name" name="name" value="{{@POST.name}}" placeholder="Administrator">
+							<check if="{{ !empty(@View.Form.Validation.name) }}">
+								<span class="help-block">{{ @View.Form.Validation.name }}</span>
+							</check>
+						</div>
+					</div>
+					<div class="form-group {{ empty(@View.Form.Validation.password) ? @has_success : 'has-error' }}">
+						<label for="admin-passwd" class="col-sm-2 control-label">Password</label>
+						<div class="col-sm-10">
+							<input type="password" class="form-control" id="admin-passwd" name="password" value="{{@POST.password}}" placeholder="Password">
+							<check if="{{ !empty(@View.Form.Validation.password) }}">
+								<span class="help-block">{{ @View.Form.Validation.password }}</span>
+							</check>
+						</div>
+					</div>
+					<div class="form-group {{ empty(@View.Form.Validation.password_confirm) ? @has_success : 'has-error' }}">
+						<label for="admin-passwd-confirm" class="col-sm-2 control-label">Password confirmation</label>
+						<div class="col-sm-10">
+							<input type="password" class="form-control" id="admin-passwd-confirm" name="password_confirm" value="{{@POST.password_confirm}}" placeholder="Password confirmation">
+							<check if="{{ !empty(@View.Form.Validation.password_confirm) }}">
+								<span class="help-block">{{ @View.Form.Validation.password_confirm }}</span>
+							</check>
+						</div>
+					</div>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Server settings</legend>
+					<div class="form-group {{ empty(@View.Form.Validation.youtubedl_path) ? @has_success : 'has-error' }}">
+						<label for="youtubedl_path" class="col-sm-2 control-label">Youtube-dl path</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="youtubedl_path" name="youtubedl_path" value="{{ empty(@POST.youtubedl_path) ? '/usr/local/bin/youtube-dl' : @POST.youtubedl_path }}">
+							<span class="help-block">Path to youtube-dl binary.</span>
+							<check if="{{ !empty(@View.Form.Validation.youtubedl_path) }}">
+								<span class="help-block">{{ @View.Form.Validation.youtubedl_path }}</span>
+							</check>
+						</div>
+					</div>
+					<div class="form-group {{ empty(@View.Form.Validation.download_path) ? @has_success : 'has-error' }}">
+						<label for="download_path" class="col-sm-2 control-label">Download path</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="download_path" name="download_path" value="{{ empty(@POST.download_path) ? \App\DIR_PUBLIC_DONWLOADS : @POST.download_path }}">
+							<span class="help-block">Path on this server where media will be downloaded to.</span>
+							<check if="{{ !empty(@View.Form.Validation.download_path) }}">
+								<span class="help-block">{{ @View.Form.Validation.download_path }}</span>
+							</check>
+						</div>
+					</div>
+				</fieldset>
+				
+				<div class="text-center">
+					<button type="reset" class="btn btn-default">Reset</button>
+					<button type="submit" class="btn btn-primary">Install</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<include href="footer.htm" />
