@@ -15,6 +15,7 @@ Media Downloader supports simultaneous downloads in background and now allows yo
 - Web installer
 - New administration page
 - New design
+- Internal caching system
 
 ## Requirements
 Required:
