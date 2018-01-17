@@ -87,12 +87,12 @@ class Media extends Object
 		return YoutubeDl::QueryFormat($this, $quality, $stream);
 	}
 
-	public function Download(int $format_id)
+	public function Download(string $format_id)
 	{
 		return \App\Models\Downloads::instance()->New($this->mapper->_id, $format_id);
 	}
 
-	public function GetDownloadByFormatId(int $format_id)
+	public function GetDownloadByFormatId(string $format_id)
 	{
 		return array_key_exists($format_id, $this->GetDownloads()) ? $this->downloads[$format_id] : null;
 	}
@@ -161,9 +161,17 @@ class Media extends Object
 		return !is_null($this->GetInfos()->playlist);
 	}
 
-	public function GetFormatInfosById(int $format_id)
+	public function GetFormatInfosById(string $format_id)
 	{
-		return array_key_exists($format_id, $this->GetFormatsInfos()) ? $this->formats[$format_id] : null;
+		if(is_int($format_id))
+		{
+			return array_key_exists($format_id, $this->GetFormatsInfos()) ? [$this->formats[$format_id]] : null;
+		}
+		else if(preg_match('/(\d+)\+(\d+)/', $format_id, $matches) && array_key_exists($matches[1], $this->GetFormatsInfos()) && array_key_exists($matches[2], $this->GetFormatsInfos()))
+		{
+			return [$this->formats[$matches[1]], $this->formats[$matches[2]]];
+		}
+		return null;
 	}
 
 	public function GetFormatsInfos()
