@@ -100,12 +100,12 @@ class Download extends Object
 
 	public function GetLogFilePath()
 	{
-		return \App\DIR_TEMP . $this->mapper->media_id . '.' . (int)$this->mapper->format_id . '.log';
+		return \App\DIR_TEMP . $this->mapper->media_id . '.' . $this->mapper->format_id . '.log';
 	}
 
 	public function GetErrorFilePath()
 	{
-		return \App\DIR_TEMP . $this->mapper->media_id . '.' . (int)$this->mapper->format_id . '.err';
+		return \App\DIR_TEMP . $this->mapper->media_id . '.' . $this->mapper->format_id . '.err';
 	}
 
 	public function GetTempOutputFilePath()
@@ -160,6 +160,11 @@ class Download extends Object
 				{
 					if(preg_match('/^\[download\]\s+Destination:\s+(.*)$/', $log, $matches))
 					{
+						// In case of merging, remove ".f<format_id>" suffix before extension
+						if(preg_match('/(\d+)\+(\d+)/', $this->mapper->format_id, $format_matches))
+						{
+							$matches[1] = preg_replace('/(.*)\.f' . $format_matches[1] . '(\.\w+)$/', '$1$2', $matches[1]);
+						}
 						$this->mapper->output = $matches[1];
 						$this->mapper->save();
 						break;

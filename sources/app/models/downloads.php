@@ -72,7 +72,7 @@ class Downloads extends Model
 		}
 	}
 
-	public function GetByFormatId(string $media_id, int $format_id)
+	public function GetByFormatId(string $media_id, string $format_id)
 	{
 		return $this->NewObject($this->mapper->findone(array('@media_id = ? AND @format_id = ?', $media_id, $format_id)));
 	}
@@ -82,7 +82,7 @@ class Downloads extends Model
 		return $this->NewObject($this->mapper->findone(array('@_id = ?', $id)));
 	}
 
-	public function New(string $media_id, int $format_id, int $process_id = 0, string $output = null, int $state = \App\Models\Objects\Download::State_Pending)
+	public function New(string $media_id, string $format_id, int $process_id = 0, string $output = null, int $state = \App\Models\Objects\Download::State_Pending)
 	{
 		$this->mapper->reset();
 		$this->mapper->media_id		= $media_id;

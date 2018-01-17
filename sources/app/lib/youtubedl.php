@@ -74,7 +74,6 @@ abstract class YoutubeDl
 		$cmd .= ' --restrict-filenames'; // --restrict-filenames is for specials chars
 		$cmd .= ' --load-info-json ' . escapeshellarg($download->GetMedia()->GetInfoFilePath());
 		$cmd .= ' --format ' . $download->format_id;
-		$cmd .= ' --no-cache-dir'; // We support our own caching method
 		$cmd .= ' --newline'; // Needed in order to read downloading infos
 		$cmd .= ' ' . escapeshellarg(Config::Get('youtubedl_args'));
 
@@ -98,8 +97,7 @@ abstract class YoutubeDl
 	public static function GetInfos(string $url)
 	{
 		$cmd = Config::Get('youtubedl_path');
-		$cmd .= ' --skip-download --no-warnings';
-		$cmd .= ' --no-cache-dir'; // We support our own caching method
+		$cmd .= ' --skip-download';
 		$cmd .= ' --no-warnings'; // JSON parsing will fail if warnings are printed
 		$cmd .= ' --output "%(extractor)s_%(id)s"';
 		$cmd .= ' --restrict-filenames';
@@ -116,11 +114,18 @@ abstract class YoutubeDl
 		return $output[0];
 	}
 
+	/**
+	 *
+	 * @param Media $media
+	 * @param int $quality
+	 * @param int $stream
+	 * @throws \App\Lib\Exception
+	 * @return string describing format (ex: "158", "151+128"...)
+	 */
 	public static function QueryFormat(Media $media, int $quality, int $stream)
 	{
 		$cmd = Config::Get('youtubedl_path');
 		$cmd .= ' --skip-download';
-		$cmd .= ' --no-cache-dir'; // We support our own caching method
 		$cmd .= ' --no-warnings'; // JSON parsing will fail if warnings are printed
 		$cmd .= ' --output "%(format_id)s"';
 		$cmd .= ' --dump-json';
@@ -134,6 +139,6 @@ abstract class YoutubeDl
 			throw new \App\Lib\Exception('Can\'t query format for URL: ' . $media->url);
 		}
 
-		return intval($content->_filename);
+		return $content->_filename;
 	}
 }

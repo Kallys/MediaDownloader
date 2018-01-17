@@ -69,15 +69,17 @@
 							</thead>
 							<tbody>
 								<repeat group="{{@View.Downloads}}" value="{{@download}}">
-									<set media="{{@download->GetMedia()}}" format="{{@media->GetFormatInfosById(@download->format_id)}}" dlStats="{{@download->GetDownloadingStats()}}" />
+									<set media="{{@download->GetMedia()}}" formats="{{@download->GetFormat()}}" dlStats="{{@download->GetDownloadingStats()}}" />
 									<tr id="{{@download->GetHash()}}">
 										<td><img src="{{@download->GetMedia()->thumbnail}}" width="80" height="50" /></td>
 										<td>{{@media->extractor_key}}</td>
 										<td>{{@media->GetTitle()}}</td>
 										<td>
-											<span class="glyphicon glyphicon-film {{ @format->HasVideoStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasVideoStream() ? 'Contains a video stream' : 'No video stream' }}"></span>
-											<span class="glyphicon glyphicon-music {{ @format->HasAudioStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasAudioStream() ? 'Contains an audio stream' : 'No audio stream' }}"></span>
-											{{@format->GetFormatName()}}
+											<repeat group="{{@formats}}" value="{{@format}}">
+												<span class="glyphicon glyphicon-film {{ @format->HasVideoStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasVideoStream() ? 'Contains a video stream' : 'No video stream' }}"></span>
+												<span class="glyphicon glyphicon-music {{ @format->HasAudioStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasAudioStream() ? 'Contains an audio stream' : 'No audio stream' }}"></span>
+												{{@format->GetFormatName()}}<br/>
+											</repeat>
 										</td>
 										<td class="state">{{@LANG.DownloadState[@download->state]}}</td>
 										<td class="prog">{{@dlStats.progression}}</td>
@@ -96,7 +98,7 @@
 											<check if="{{ @download->state == \App\Models\Objects\Download::State_Finished }}">
 												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="download" title="Download to my computer" aria-label="Download to my computer"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
 											</check>
-											<button type="button" class="btn btn-danger" data-desc="Delete download with title '{{@media->GetTitle()}}' and format '{{@format->GetFormatName()}}'" data-name="downloads[{{@download->_id}}]" data-value="delete" data-toggle="modal" data-target="#confirmationModal" title="Delete Download" aria-label="Delete Download"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+											<button type="button" class="btn btn-danger" data-desc="Delete download with title '{{@media->GetTitle()}}' and format '{{@download->format_id}}'" data-name="downloads[{{@download->_id}}]" data-value="delete" data-toggle="modal" data-target="#confirmationModal" title="Delete Download" aria-label="Delete Download"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 										</td>
 									</tr>
 								</repeat>
