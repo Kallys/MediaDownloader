@@ -64,16 +64,20 @@ class Download extends Object
 
 				if(is_readable($this->GetLogFilePath()))
 				{
-					$log = file($this->GetLogFilePath());
+					$logs = file($this->GetLogFilePath());
 
-					if(preg_match("/^\[download\]\s+([0-9]{1,3}\.[0-9]{1,2}%) of\s+.* at\s+(.*) ETA\s+(.*)$/", $log[count($log) - 1], $matches))
+					foreach(array_reverse($logs) as $log)
 					{
-						$result['progression']	= $matches[1];
-
-						if($state === self::State_Downloading)
+						if(preg_match("/^\[download\]\s+([0-9]{1,3}\.[0-9]{1,2}%) of\s+.* at\s+(.*) ETA\s+(.*)$/", $log, $matches))
 						{
-							$result['speed']		= $matches[2];
-							$result['ETA']			= $matches[3];
+							$result['progression']	= $matches[1];
+
+							if($this->mapper->state === self::State_Downloading)
+							{
+								$result['speed']	= $matches[2];
+								$result['ETA']		= $matches[3];
+							}
+							break;
 						}
 					}
 				}
@@ -149,22 +153,36 @@ class Download extends Object
 			return;
 		}
 
-		if(empty($this->mapper->output))
+		// Parse output file name if not already done
+		if(empty($this->mapper->output) && is_readable($this->GetLogFilePath()))
 		{
-			// Parse output file name if not already done
-			if(is_readable($this->GetLogFilePath()))
-			{
-				$logs = file($this->GetLogFilePath());
+			$logs = file($this->GetLogFilePath());
 
+			// Prevent potential conflicts
+			if(preg_match('/^\[download\]\s+(.*)\s+has already been downloaded and merged$/', $logs[count($logs) - 1], $matches))
+			{
+				$this->mapper->output = $matches[1];
+				$this->mapper->save();
+			}
+			// In case of merging, read backward and search for merging log line
+			else if(preg_match('/(\d+)\+(\d+)/', $this->mapper->format_id, $format_matches))
+			{
+				foreach(array_reverse($logs) as $log)
+				{
+					if(preg_match('/^\[ffmpeg\]\s+Merging formats into\s+"(.*)"$/', $log, $matches))
+					{
+						$this->mapper->output = $matches[1];
+						$this->mapper->save();
+						break;
+					}
+				}
+			}
+			else
+			{
 				foreach($logs as $log)
 				{
 					if(preg_match('/^\[download\]\s+Destination:\s+(.*)$/', $log, $matches))
 					{
-						// In case of merging, remove ".f<format_id>" suffix before extension
-						if(preg_match('/(\d+)\+(\d+)/', $this->mapper->format_id, $format_matches))
-						{
-							$matches[1] = preg_replace('/(.*)\.f' . $format_matches[1] . '(\.\w+)$/', '$1$2', $matches[1]);
-						}
 						$this->mapper->output = $matches[1];
 						$this->mapper->save();
 						break;
@@ -172,14 +190,12 @@ class Download extends Object
 				}
 			}
 		}
-		else
+
+		// Check if process is still running (process id is the same as current running process when downloading process calls on success callback, ie it finished)
+		if(!empty($this->mapper->output) && (!Process::IsRunning($this->mapper->process_id) || Process::AmI($this->mapper->process_id)))
 		{
-			// Check if process is still running (process id is the same as current running process when downloading process calls on success callback, ie it finished)
-			if(!Process::IsRunning($this->mapper->process_id) || Process::AmI($this->mapper->process_id))
-			{
-				$this->SetState(is_file($this->mapper->output) ? self::State_Finished : self::State_Error);
-				$this->mapper->save();
-			}
+			$this->SetState(is_file($this->mapper->output) ? self::State_Finished : self::State_Error);
+			$this->mapper->save();
 		}
 	}
 
