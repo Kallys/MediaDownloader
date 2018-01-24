@@ -2,7 +2,7 @@
 
 namespace App\Models\Objects;
 
-class User extends Object
+class User extends MObject
 {
 }
 

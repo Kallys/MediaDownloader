@@ -7,7 +7,7 @@ use App\Lib\YoutubeDl;
 
 class Ex_NoInfo extends \App\Lib\Exception {}
 
-class Media extends Object
+class Media extends MObject
 {
 	//! Media Info Object returned by Youtube-dl
 	private $infos = null;

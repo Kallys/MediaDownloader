@@ -2,7 +2,7 @@
 
 namespace App\Models\Objects;
 
-abstract class Object
+abstract class MObject
 {
 	//! Database mapper
 	protected $mapper = null;

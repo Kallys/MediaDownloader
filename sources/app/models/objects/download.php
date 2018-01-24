@@ -7,7 +7,7 @@ use App\Lib\Process;
 
 class Ex_UnknownState extends \App\Lib\Exception {}
 
-class Download extends Object
+class Download extends MObject
 {
 	private $media = null;
 
