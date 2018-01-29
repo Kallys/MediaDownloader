@@ -125,6 +125,9 @@ class App
 
 	public function Run()
 	{
+		// Load session if any (must be done before rendering)
+		\App\Lib\Session::instance();
+
 		if($this->f3->get('PATH') !== $this->f3->alias('install'))
 		{
 			// Configure debug mode
