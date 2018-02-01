@@ -2,14 +2,14 @@
 
 <div class="container">
 	<div class="panel panel-info">
-		<div class="panel-heading"><h3 class="panel-title">Download request summary</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">{{ @LANG.DownloadRequestSummary }}</h3></div>
 		<div class="panel-body">
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>Thumbnail</th>
-						<th>URL</th>
-						<th>Status</th>
+						<th>{{ @LANG.Thumbnail }}</th>
+						<th>{{ @LANG.URL }}</th>
+						<th>{{ @LANG.Status }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -18,7 +18,7 @@
 							<td>
 								<check if="{{ @result.no_info }}">
 									<true>
-										<div style="width:80px; height:50px;" class="text-center"><span class="glyphicon glyphicon-camera"></span> No image</div>
+										<div style="width:80px; height:50px;" class="text-center"><span class="glyphicon glyphicon-camera"></span> {{ @LANG.NoImage }}</div>
 									</true>
 									<false>
 										<img width="80" height="50" src="{{@result.media->thumbnail}}" alt="{{@View.media->extractor_key}}" />
@@ -35,10 +35,10 @@
 	</div>
 	<div class="row">
 		<div class="pull-left">
-			<a href="{{@URL_BASE}}{{ 'links' | alias }}" class="btn btn-default">&lt; Add new links</a>
+			<a href="{{@URL_BASE}}{{ 'links' | alias }}" class="btn btn-default">&lt; {{@LANG.AddNewLinks }}</a>
 		</div>
 		<div class="pull-right">
-			<a href="{{@URL_BASE}}{{ 'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias }}" class="btn btn-default">Go to media list &gt;</a>
+			<a href="{{@URL_BASE}}{{ 'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias }}" class="btn btn-default">{{ @LANG.GoTo, @LANG.MediaList | format }} &gt;</a>
 		</div>
 	</div>
 </div>

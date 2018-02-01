@@ -13,20 +13,20 @@
 			<div class="pull-left">
 				<check if="{{ !empty(@View.Urls[@View.UrlIndex - 1]) }}">
 					<true>
-						<button type="submit" name="url_index" value="{{@View.UrlIndex - 1}}" class="btn btn-default">&lt; Previous media ({{@View.UrlIndex}} / {{count(@View.Urls)}})</button>
+						<button type="submit" name="url_index" value="{{@View.UrlIndex - 1}}" class="btn btn-default">&lt; {{ @LANG.PreviousMedia }} ({{@View.UrlIndex}} / {{count(@View.Urls)}})</button>
 					</true>
 					<false>
-						<a href="{{@URL_BASE}}{{ 'links' | alias }}" class="btn btn-default">&lt; Add new links</a>
+						<a href="{{@URL_BASE}}{{ 'links' | alias }}" class="btn btn-default">&lt; {{ @LANG.AddNewLinks }}</a>
 					</false>
 				</check>
 			</div>
 			<div class="pull-right">
 				<check if="{{ !empty(@View.Urls[@View.UrlIndex + 1]) }}">
 					<true>
-						<button type="submit" name="url_index" value="{{@View.UrlIndex + 1}}" class="btn btn-default">Next media ({{@View.UrlIndex + 2}} / {{count(@View.Urls)}}) &gt;</button>
+						<button type="submit" name="url_index" value="{{@View.UrlIndex + 1}}" class="btn btn-default">{{ @LANG.NextMedia }} ({{@View.UrlIndex + 2}} / {{count(@View.Urls)}}) &gt;</button>
 					</true>
 					<false>
-						<a href="{{@URL_BASE}}{{ 'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias }}" class="btn btn-default">Go to media list &gt;</a>
+						<a href="{{@URL_BASE}}{{ 'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias }}" class="btn btn-default">{{ @LANG.GoTo, @LANG.MediaList | format }} &gt;</a>
 					</false>
 				</check>
 			</div>

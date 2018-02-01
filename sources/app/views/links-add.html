@@ -2,22 +2,22 @@
 
 <div class="container">
 	<div class="panel panel-primary">
-		<div class="panel-heading"><h3 class="panel-title">Add links</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">{{ @LANG.AddLinks }}</h3></div>
 		<div class="panel-body">
 			<form id="download-form" method="post">
 				<div class="form-group">
 					<div class="col-md-10">
 						<fieldset>
-							<legend>Video links</legend>
-							<textarea class="form-control" id="url" name="urls" placeholder="One URL per line" rows="6">{{@POST.urls}}</textarea>
+							<legend>{{ @LANG.VideoLinks }}</legend>
+							<textarea class="form-control" id="url" name="urls" placeholder="{{ @LANG.VideoLinksPlaceholder }}" rows="6">{{@POST.urls}}</textarea>
 						</fieldset>
 					</div>
 					<div class="col-md-2">
 						<fieldset>
-							<legend>Options</legend>
+							<legend>{{ @LANG.Options }}</legend>
 							
 							<div class="form-group">
-								<label for="stream" class="control-label">Stream:</label>
+								<label for="stream" class="control-label">{{ @LANG.Stream . @LANG.Colon }}</label>
 								<select name="stream" class="form-control">
 									<repeat group="{{@LANG.FormatStream}}" key="{{@value}}" value="{{@name}}">
 										<option value="{{@value}}" {{ \App\Models\Config::Get('default_stream') == @value ? 'selected' : '' }}>{{@name}}</option>
@@ -26,7 +26,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label for="quality" class="control-label">Quality:</label>
+								<label for="quality" class="control-label">{{ @LANG.Quality . @LANG.Colon }}</label>
 								<select name="quality" class="form-control">
 									<repeat group="{{@LANG.FormatQuality}}" key="{{@value}}" value="{{@name}}">
 										<option value="{{@value}}" {{ \App\Models\Config::Get('default_quality') == @value ? 'selected' : '' }}>{{@name}}</option>
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div class="text-center">
-					<button type="submit" class="btn btn-primary">Download</button>
+					<button type="submit" class="btn btn-primary">{{ @LANG.Download }}</button>
 				</div>
 			</form>
 		</div>
@@ -50,24 +50,24 @@
 		</div>
 		<div class="col-sm-6">
 			<div class="panel panel-info">
-				<div class="panel-heading"><h3 class="panel-title">Help</h3></div>
+				<div class="panel-heading"><h3 class="panel-title">{{ @LANG.Help }}</h3></div>
 				<div class="panel-body">
 					<dl>
-						<dt>How does it work ?</dt>
+						<dt>{{ @LANG.HowToAddLinks }}</dt>
 						<dd>
 							<ol>
-								<li>Paste your video link(s) in the text area</li>
-								<li>Adjust options</li>
-								<li>Click on then <button class="btn btn-xs btn-primary">Download</button> button</li>
+								<li>{{ @LANG.HowToAddLinksSteps[0] }}</li>
+								<li>{{ @LANG.HowToAddLinksSteps[1] }}</li>
+								<li>{{ @LANG.HowToAddLinksSteps[2], '<button class="btn btn-xs btn-primary">' . @LANG.Download . '</button>' | format }}</li>
 							</ol>
 						</dd>
-						<dt>How can I download a video directly to my computer?</dt>
+						<dt>{{ @LANG.HowToDirectDownload }}</dt>
 						<dd>
 							<ol>
-								<li>Paste your video link(s) in the text area</li>
-								<li>Set "quality" option to "Manual"</li>
-								<li>Click on the <button class="btn btn-xs btn-primary">Download</button> button</li>
-								<li>Click on the <button class="btn btn-xs btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button> button on the wanted format line</li>
+								<li>{{ @LANG.HowToDirectDownloadSteps[0] }}</li>
+								<li>{{ @LANG.HowToDirectDownloadSteps[1], @LANG.Quality, @LANG.FormatQuality[\App\Lib\YoutubeDl::QUALITY_MANUAL] | format }}</li>
+								<li>{{ @LANG.HowToDirectDownloadSteps[2], '<button class="btn btn-xs btn-primary">' . @LANG.Download . '</button>' | format }}</li>
+								<li>{{ @LANG.HowToDirectDownloadSteps[3], '<button class="btn btn-xs btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>' | format }}</li>
 							</ol>
 						</dd>
 					</dl>

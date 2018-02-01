@@ -31,30 +31,27 @@
 			<check if="{{\App\Lib\SignedInUser::IsUserSignedIn()}}">
 				<div class="navbar-collapse collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="{{@URL_BASE}}{{'links' | alias}}">Add links</a></li>
-						<li><a href="{{@URL_BASE}}{{'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias}}">Media list</a></li>
-						<exclude>
-							<li><a href="{{@URL_BASE}}{{'downloads' | alias}}">Downloads <check if="\App\Lib\Downloader::background_jobs() > 0"><span class="badge">{{\App\Lib\Downloader::background_jobs()}}</span></check></a></li>
-							<li><a href="{{@URL_BASE}}{{'search' | alias}}">Search</a></li>
-							<li><a href="{{@URL_BASE}}{{'browse' | alias}}">Browse</a></li>
-						</exclude>
+						<li><a href="{{@URL_BASE}}{{'links' | alias}}">{{ @LANG.AddLinks }}</a></li>
+						<li><a href="{{@URL_BASE}}{{'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias}}">{{ @LANG.MediaList }}</a></li>
 					</ul>
 
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="{{@URL_BASE}}{{'admin' | alias}}">Admin</a></li>
-						<li><a href="{{@URL_BASE}}{{'logout' | alias}}">Logout</a></li>
+						<li><a href="{{@URL_BASE}}{{'admin' | alias}}">{{ @LANG.Admin }}</a></li>
+						<li><a href="{{@URL_BASE}}{{'logout' | alias}}">{{ @LANG.Logout }}</a></li>
 					</ul>
 				</div>
 			</check>
 			
 		</div>
 
-		<div class="container">
-			<repeat group="{{\App\Lib\Alerter::GetMessages()}}" value="{{@alert}}">
-				<div class="alert alert-dismissible alert-{{@alert.type}}" role="alert">
-				 	<button type="button" class="close" data-dismiss="alert">&times;</button>
-				 	<check if="{{@alert.title}}"><h4>{{@alert.title}}</h4></check>
-					<p>{{@alert.message}}</p>
-				</div>
-			</repeat>
-		</div>
+		<check if="{{ !empty(\App\Lib\Alerter::GetMessages()) }}">
+			<div class="container">
+				<repeat group="{{\App\Lib\Alerter::GetMessages()}}" value="{{@alert}}">
+					<div class="alert alert-dismissible alert-{{@alert.type}}" role="alert">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<check if="{{@alert.title}}"><h4>{{@alert.title}}</h4></check>
+						<p>{{@alert.message}}</p>
+					</div>
+				</repeat>
+			</div>
+		</check>

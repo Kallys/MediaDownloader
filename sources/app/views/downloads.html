@@ -7,16 +7,16 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-					<h4 class="modal-title">Are your sure?</h4>
+					<h4 class="modal-title">{{ @LANG.AreYouSure }}</h4>
 				</div>
 				<div class="modal-body">
-					<p>Are you sure you want to perform the following action:</p>
+					<p>{{ @LANG.AreYouSureDesc . @LANG.Colon}}</p>
 					<p class="actionDescription" style="font-weight: bold;"></p>
 				</div>
 				<div class="modal-footer">
 					<form method="POST">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="confirmButton btn btn-primary">Confirm</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">{{ @LANG.Close }}</button>
+						<button type="submit" class="confirmButton btn btn-primary">{{ @LANG.Confirm }}</button>
 					</form>
 				</div>
 			</div>
@@ -24,11 +24,11 @@
 	</div>
 	
 	<div class="panel panel-default">
-		<div class="panel-heading"><h3 class="panel-title">Actions</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">{{ @LANG.Actions, 3 | format }}</h3></div>
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-sm-6">
-					<h4>Filters</h4>
+					<h4>{{ @LANG.Filters }}</h4>
 					<ul class="nav nav-pills" role="tablist">
 						<repeat group="{{@LANG.DownloadFilters}}" key="{{@value}}" value="{{@name}}">
 							<li role="presentation"{{ @value == @PARAMS.filter ? ' class="active"' : '' }}><a href="{{@URL_BASE}}{{'downloads', ['filter' => @value] | alias }}">{{@name}} <span class="badge">{{@View.DownloadsCount[@value]}}</span></a></li>
@@ -36,10 +36,10 @@
 					</ul>
 				</div>
 				<div class="col-sm-6">
-					<h4>Actions</h4>
+					<h4>{{ @LANG.Actions, 3 | format }}</h4>
 					<form method="POST">
-						<button type="submit" class="btn btn-default" name="action" value="pause_all_downloading">Pause all downloading</button>
-						<button type="button" class="btn btn-danger" data-desc="Remove all finished downloads" data-name="action" data-value="remove_all_finished" data-toggle="modal" data-target="#confirmationModal">Remove all finished</button>
+						<button type="submit" class="btn btn-default" name="action" value="pause_all_downloading">{{ @LANG.PauseAllDownloading }}</button>
+						<button type="button" class="btn btn-danger" data-desc="Remove all finished downloads" data-name="action" data-value="remove_all_finished" data-toggle="modal" data-target="#confirmationModal">{{ @LANG.RemoveAllFinished }}</button>
 					</form>
 				</div>
 			</div>
@@ -47,24 +47,24 @@
 	</div>
 
 	<div class="panel panel-primary">
-		<div class="panel-heading"><h3 class="panel-title">Media list</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">{{ @LANG.MediaList }}</h3></div>
 		<div class="panel-body">
 			<check if="{{empty(@View.Downloads)}}">
-				<true><div class="alert alert-info" role="alert">Gloops, nothing to download!</div></true>
+				<true><div class="alert alert-info" role="alert">{{ @LANG.NoDownload }}</div></true>
 				<false>
 					<form method="POST">
 						<table class="table table-striped table-hover">
 							<thead>
 								<tr>
-									<th>Thumbnail</th>
-									<th>Host</th>
-									<th>Title</th>
-									<th>Format</th>
-									<th>State</th>
-									<th>Progression</th>
-									<th>Speed</th>
-									<th>ETA</th>
-									<th>Action</th>
+									<th>{{ @LANG.Thumbnail }}</th>
+									<th>{{ @LANG.Host }}</th>
+									<th>{{ @LANG.Title }}</th>
+									<th>{{ @LANG.Format }}</th>
+									<th>{{ @LANG.State }}</th>
+									<th>{{ @LANG.Progression }}</th>
+									<th>{{ @LANG.Speed }}</th>
+									<th>{{ @LANG.ETA }}</th>
+									<th>{{ @LANG.Actions, 1 | format }}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -76,8 +76,8 @@
 										<td>{{@media->GetTitle()}}</td>
 										<td>
 											<repeat group="{{@formats}}" value="{{@format}}">
-												<span class="glyphicon glyphicon-film {{ @format->HasVideoStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasVideoStream() ? 'Contains a video stream' : 'No video stream' }}"></span>
-												<span class="glyphicon glyphicon-music {{ @format->HasAudioStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasAudioStream() ? 'Contains an audio stream' : 'No audio stream' }}"></span>
+												<span class="glyphicon glyphicon-film {{ @format->HasVideoStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasVideoStream() ? @LANG.VideoStreamWith : @LANG.VideoStreamWithout }}"></span>
+												<span class="glyphicon glyphicon-music {{ @format->HasAudioStream() ? 'text-primary' : 'text-muted' }}" aria-hidden="true" title="{{ @format->HasAudioStream() ? @LANG.AudioStreamWith : @@LANG.AudioStreamWithout }}"></span>
 												{{@format->GetFormatName()}}<br/>
 											</repeat>
 										</td>
@@ -87,18 +87,18 @@
 										<td class="eta">{{@dlStats.ETA}}</td>
 										<td class="action">
 											<check if="{{ @download->state == \App\Models\Objects\Download::State_Paused }}">
-												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="resume" title="Resume Download" aria-label="Resume Download"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="resume" title="{{ @LANG.ResumeDownload }}" aria-label="{{ @LANG.ResumeDownload }}"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
 											</check>
 											<check if="{{ in_array(@download->state, [\App\Models\Objects\Download::State_Pending , \App\Models\Objects\Download::State_Downloading]) }}">
-												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="pause" title="Pause Download" aria-label="Pause Download"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button>
+												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="pause" title="{{ @LANG.PauseDownload }}" aria-label="{{ @LANG.PauseDownload }}"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button>
 											</check>
 											<check if="{{ @download->state == \App\Models\Objects\Download::State_Error }}">
-												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="retry" title="Retry Download" aria-label="Retry Download"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
+												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="retry" title="{{ @LANG.RetryDownload }}" aria-label="{{ @LANG.RetryDownload }}"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
 											</check>
 											<check if="{{ @download->state == \App\Models\Objects\Download::State_Finished }}">
-												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="download" title="Download to my computer" aria-label="Download to my computer"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+												<button class="btn btn-default" name="downloads[{{@download->_id}}]" value="download" title="{{ @LANG.DownloadToComputer }}" aria-label="{{ @LANG.DownloadToComputer }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
 											</check>
-											<button type="button" class="btn btn-danger" data-desc="Delete download with title '{{@media->GetTitle()}}' and format '{{@download->format_id}}'" data-name="downloads[{{@download->_id}}]" data-value="delete" data-toggle="modal" data-target="#confirmationModal" title="Delete Download" aria-label="Delete Download"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+											<button type="button" class="btn btn-danger" data-desc="{{ @LANG.DeleteThisDownload, @media->GetTitle(), @download->format_id | format }}" data-name="downloads[{{@download->_id}}]" data-value="delete" data-toggle="modal" data-target="#confirmationModal" title="{{ @LANG.DeleteDownload }}" aria-label="{{ @LANG.DeleteDownload }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 										</td>
 									</tr>
 								</repeat>
