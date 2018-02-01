@@ -105,6 +105,11 @@ class App
 			return;
 		}
 		$this->config = Config::instance();
+		
+		if(!empty($this->config->language))
+		{
+			$this->f3->set('LANGUAGE', $this->config->language);
+		}
 
 		// Set Fat-Free dynamic parameters
 		$this->f3->mset([

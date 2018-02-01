@@ -23,6 +23,7 @@ class Config extends Model
 									->key('default_quality', Validator::intType()->in(\Base::instance()->constants(YoutubeDl::class, 'QUALITY_')))
 									->key('default_stream', Validator::intType()->in(\Base::instance()->constants(YoutubeDl::class, 'STREAM_')))
 									->key('download_path', Validator::stringType()->directory()->readable()->writable())
+									->key('language', Validator::stringType()->in(\Base::instance()->get('App.Languages')))
 									->key('max_concurrents', Validator::intType()->between(0))
 									->key('max_simultaneous', Validator::intType()->between(0))
 									->key('youtubedl_args', Validator::stringType())
@@ -40,6 +41,7 @@ class Config extends Model
 		$this->mapper->default_quality	= YoutubeDl::QUALITY_BEST_EVER;
 		$this->mapper->default_stream	= YoutubeDl::STREAM_BOTH;
 		$this->mapper->download_path	= \App\DIR_PUBLIC_DONWLOADS;
+		$this->mapper->language			= 'en';
 		$this->mapper->max_concurrents	= 1;
 		$this->mapper->max_simultaneous	= 3;
 		$this->mapper->youtubedl_args	= '';

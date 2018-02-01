@@ -23,6 +23,7 @@ class Admin extends Controller
 					'default_quality'	=> intval($post['default_quality']),
 					'default_stream'	=> intval($post['default_stream']),
 					'download_path'		=> rtrim($post['download_path'], '/') . '/',
+					'language'			=> trim($post['language']),
 					'max_concurrents'	=> intval($post['max_concurrents']),
 					'max_simultaneous'	=> intval($post['max_simultaneous']),
 					'youtubedl_args'	=> trim($post['youtubedl_args']),

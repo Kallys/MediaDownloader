@@ -148,6 +148,25 @@
 							</check>
 						</div>
 					</div>
+					<div class="row">
+						<div class="form-group col-sm-6 {{ empty(@View.Validation.language) ? @has_success : 'has-error' }}">
+							<label for="language" class="control-label">{{ @LANG.Language }}</label>
+							<select name="language" class="form-control">
+								<repeat group="{{ \Base::instance()->get('App.Languages') }}" key="{{@value}}" value="{{@name}}">
+									<option value="{{@value}}" {{@View.Config.language == @value ? 'selected' : ''}}>{{@name}}</option>
+								</repeat>
+							</select>
+							<span class="help-block">{{ @LANG.LanguageDesc }}</span>
+							<check if="{{ !empty(@View.Validation.language) }}">
+								<span class="help-block"><b>{{ @LANG.ValidationFailed . @LANG.Colon }}</b></span>
+								<ul class="help-block">
+									<repeat group="{{@View.Validation.language}}" value="{{@value}}">
+										<li>{{@value}}</li>
+									</repeat>
+								</ul>
+							</check>
+						</div>
+					</div>
 				</fieldset>
 				
 				<div class="text-center">

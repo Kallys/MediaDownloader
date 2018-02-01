@@ -108,6 +108,8 @@ return [
 	],
 	'Install'					=> 'Installer',
 	'Installation'				=> 'Installation',
+	'Language'					=> 'Langue',
+	'LanguageDesc'				=> 'Langue à utiliser pour l\'application.',
 	'License'					=> 'Licence',
 	'LikeCount'					=> 'Mentions "j\'aime"',
 	'Login'						=> 'Connexion',
