@@ -1,8 +1,6 @@
 <?php
 
-use \App\Lib\YoutubeDl;
-
-return array(
+return [
 	'About'						=> 'About',
 	'ABR'						=> 'ABR',
 	'Actions'					=> '{0, plural, one {Action}, other {Actions} }',
@@ -26,7 +24,6 @@ return array(
 	'Creator'					=> 'Creator',
 	'Credits'					=> 'Credits',
 	'CommonErrorsToCheck'		=> 'Common errors to check',
-	'DateFormat'				=> 'Y-m-d',
 	'DebugLevel'				=> 'Debug level',
 	'DebugLevelDesc'			=> 'Verbosity level of debug informations.',
 	'DefaultQuality'			=> 'Default quality',
@@ -80,15 +77,15 @@ return array(
 	'Filters'					=> 'Filters',
 	'Format'					=> 'Format',
 	'FormatQuality'				=> [
-		YoutubeDl::QUALITY_BEST			=> 'Best',
-		YoutubeDl::QUALITY_BEST_EVER	=> 'Best ever',
-		YoutubeDl::QUALITY_WORST		=> 'Worst',
-		YoutubeDl::QUALITY_MANUAL		=> 'Manual'
+		\App\Lib\YoutubeDl::QUALITY_BEST		=> 'Best',
+		\App\Lib\YoutubeDl::QUALITY_BEST_EVER	=> 'Best ever',
+		\App\Lib\YoutubeDl::QUALITY_WORST		=> 'Worst',
+		\App\Lib\YoutubeDl::QUALITY_MANUAL		=> 'Manual'
 	],
 	'FormatStream'				=> [
-		YoutubeDl::STREAM_BOTH	=> 'Audio and Video',
-		YoutubeDl::STREAM_AUDIO	=> 'Audio only',
-		YoutubeDl::STREAM_VIDEO	=> 'Video only'
+		\App\Lib\YoutubeDl::STREAM_BOTH		=> 'Audio and Video',
+		\App\Lib\YoutubeDl::STREAM_AUDIO	=> 'Audio only',
+		\App\Lib\YoutubeDl::STREAM_VIDEO	=> 'Video only'
 	],
 	'FPS'						=> 'FPS',
 	'FreeSpace'					=> 'Free space',
@@ -141,8 +138,8 @@ return array(
 	'PasswordConfirmation'		=> 'Password confirmation',
 	'PauseAllDownloading'		=> 'Pause all downloading',
 	'PauseDownload'				=> 'Pause Download',
-	'PHPFramework'				=> 'PHPFramework',
-	'PHPLibraries'				=> 'PHPLibraries',
+	'PHPFramework'				=> 'PHP Framework',
+	'PHPLibraries'				=> 'PHP Libraries',
 	'PreviousMedia'				=> 'Previous media',
 	'Progression'				=> 'Progression',
 	'ProjectPage'				=> 'Project page',
@@ -184,8 +181,8 @@ return array(
 	'VideoStreamWithout'		=> 'No video stream',
 	'ViewCount'					=> 'View count',
 	'YoutubedlExtraArgs'		=> 'Youtube-dl extra arguments',
-	'YoutubedlExtraArgsDesc'	=> 'Extra arguments added to youtube-dl download command.',
+	'YoutubedlExtraArgsDesc'	=> 'Extra arguments added to Youtube-dl download command.',
 	'YoutubedlPath'				=> 'Youtube-dl path',
-	'YoutubedlPathDesc'			=> 'Path to youtube-dl binary.',
+	'YoutubedlPathDesc'			=> 'Path to Youtube-dl binary.',
 	'YoutubedlSettings'			=> 'Youtube-dl settings',
-);
+];
