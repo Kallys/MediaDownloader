@@ -30,5 +30,8 @@ return array(
 		\App\Controllers\Downloads::Filter_all		=> 'All',
 		\App\Controllers\Downloads::Filter_active	=> 'Active only',
 		\App\Controllers\Downloads::Filter_inactive	=> 'Inactive only'
-	]
+	],
+    'AddUser'               => 'Add User',
+    'Username'              => 'Username',
+    'PasswordConfirmation' => 'Password confirmation',
 );

@@ -7,6 +7,7 @@ use Respect\Validation\Validator;
 class Users extends Model
 {
 	private static $validator =  null;
+	public static $IS_ADMIN = 1;
 
 	public function __construct()
 	{
@@ -47,13 +48,22 @@ class Users extends Model
 		return $this->NewObject($this->mapper->findone(['@name = ?', $name]));
 	}
 
-	public function New(string $name, string $password)
+	public function New(string $name, string $password, int $is_admin = 0)
 	{
 		$this->mapper->reset();
 		$this->mapper->name			= $name;
 		$this->mapper->password 	= $password;
+		$this->mapper->is_admin 	= $is_admin;
 		$this->mapper->save();
 
 		return $this->NewObject($this->mapper);
 	}
+
+	public function DelByName(string $name)
+    {
+        if(!$this->mapper->findone(['@name = ?', $name])) {
+            throw new Ex_InvalidData();
+        }
+        return $this->mapper->erase(['@name = ?', $name]);
+    }
 }

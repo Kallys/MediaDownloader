@@ -79,7 +79,7 @@ class Install extends Controller
 				Users::Destroy();
 
 				// Create administrator
-				Users::instance()->New($post['name'], $post['password']);
+				Users::instance()->New($post['name'], $post['password'], Users::$IS_ADMIN);
 
 				// Create configs
 				Config::instance()->MSet([

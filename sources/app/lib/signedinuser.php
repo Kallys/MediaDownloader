@@ -22,6 +22,7 @@ abstract class SignedInUser
 		}
 
 		Session::instance()->Set(self::$session_key, $user->_id);
+		Session::instance()->Set('is_admin', $user->is_admin);
 	}
 
 	public static function SignOut()
@@ -35,6 +36,11 @@ abstract class SignedInUser
 	public static function IsUserSignedIn()
 	{
 		return Session::instance()->Exists(self::$session_key);
+	}
+
+	public static function IsAdmin()
+	{
+        return  Session::instance()->Get('is_admin');
 	}
 }
 

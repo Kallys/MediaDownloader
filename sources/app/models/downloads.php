@@ -82,11 +82,12 @@ class Downloads extends Model
 		return $this->NewObject($this->mapper->findone(array('@_id = ?', $id)));
 	}
 
-	public function New(string $media_id, string $format_id, int $process_id = 0, string $output = null, int $state = \App\Models\Objects\Download::State_Pending)
+	public function New(string $media_id, string $format_id, string $download_path, int $process_id = 0, string $output = null, int $state = \App\Models\Objects\Download::State_Pending)
 	{
 		$this->mapper->reset();
 		$this->mapper->media_id		= $media_id;
 		$this->mapper->format_id 	= $format_id;
+		$this->mapper->download_path 	= $download_path;
 		$this->mapper->process_id	= $process_id;
 		$this->mapper->output		= $output;
 		$this->mapper->state		= $state;

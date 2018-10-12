@@ -2,9 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Lib\Exception;
 use App\Lib\YoutubeDl;
 use App\Lib\Alerter;
 use App\Models\Media;
+use Respect\Validation\Validator;
 
 class Links extends Controller
 {
@@ -28,6 +30,17 @@ class Links extends Controller
 			// Trim and remove duplicates from urls
 			$urls = array_unique(array_filter(array_map('trim', explode("\r\n", $urls))));
 
+			if($f3->exists('POST.download_path', $download_path))
+            {
+                if($download_path) {
+                    try {
+                        Validator::key('download_path', Validator::stringType()->directory()->readable()->writable())
+                            ->assert($data);
+                    } catch (\Respect\Validation\Exceptions\NestedValidationException $e) {
+                        Alerter::Error('<b>' . $download_path . ' is invalid.</b>', 'No valid download path!');
+                    }
+                }
+            }
 			if(empty($urls))
 			{
 				Alerter::Error('<b>Any of the following given urls are valid:</b><br>- ' . implode('<br>- ', $urls), 'No valid link!');
@@ -37,11 +50,11 @@ class Links extends Controller
 				// Need selection page
 				if($data['quality'] == YoutubeDl::QUALITY_MANUAL)
 				{
-					return $this->BrowseLinks($f3, $urls);
+					return $this->BrowseLinks($f3, $urls, $download_path);
 				}
 				else
 				{
-					return $this->DownloadLinks($f3, $urls, $data['quality'], $data['stream']);
+					return $this->DownloadLinks($f3, $urls, $data['quality'], $data['stream'], $download_path);
 				}
 			}
 		}
@@ -49,7 +62,7 @@ class Links extends Controller
 		return $this->Get($f3, $routes);
 	}
 
-	private function BrowseLinks(\Base $f3, array $urls, int $index = 0)
+	private function BrowseLinks(\Base $f3, array $urls, string $download_path, int $index = 0)
 	{
 		$url = $urls[$index];
 		$no_info = null;
@@ -57,7 +70,7 @@ class Links extends Controller
 		try {
 			if(is_null($media = Media::instance()->GetByUrl($url)))
 			{
-				$media = Media::instance()->New($url);
+				$media = Media::instance()->New($url, $download_path);
 			}
 			$media->GetFilename();// Force lazzy load infos
 		}
@@ -78,7 +91,7 @@ class Links extends Controller
 		echo \Template::instance()->render('links-browse.html');
 	}
 
-	private function DownloadLinks(\Base $f3, array $urls, int $quality, int $stream)
+	private function DownloadLinks(\Base $f3, array $urls, int $quality, int $stream, string $download_path)
 	{
 		$result = [];
 
@@ -92,10 +105,10 @@ class Links extends Controller
 			{
 				if(is_null($media = \App\Models\Media::instance()->GetByUrl($url)))
 				{
-					$media = \App\Models\Media::instance()->New($url);
+					$media = \App\Models\Media::instance()->New($url, $download_path);
 				}
 
-				$media->Download($media->QueryFormat($quality, $stream));
+				$media->Download($media->QueryFormat($quality, $stream), $download_path);
 			}
 			catch(\App\Models\Ex_Duplicate $e)
 			{

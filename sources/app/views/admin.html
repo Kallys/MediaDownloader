@@ -2,7 +2,7 @@
 
 <div class="container">
 	<div class="panel panel-primary">
-		<div class="panel-heading"><h3 class="panel-title">Administration</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">Settings</h3></div>
 		<div class="panel-body">
 			<form method="post">
 				<set has_success="{{ @VERB == 'POST' ? 'has-success' : '' }}">
@@ -116,39 +116,41 @@
 						</check>
 					</div>
 				</fieldset>
-				
-				<fieldset>
-					<legend>App settings</legend>
-					<div class="row">
-						<div class="form-group col-sm-6 {{ empty(@View.Validation.debug_level) ? @has_success : 'has-error' }}">
-							<label for="debug_level" class="control-label">Debug level</label>
-							<input type="number" class="form-control" id="debug_level" name="debug_level" value="{{@View.Config.debug_level}}" min="0" max="3">
-							<span class="help-block">Verbosity level of debug informations.</span>
-							<check if="{{ !empty(@View.Validation.debug_level) }}">
-								<span class="help-block"><b>Validation failed with theses messages:</b></span>
-								<ul class="help-block">
-									<repeat group="{{@View.Validation.debug_level}}" value="{{@value}}">
-										<li>{{@value}}</li>
-									</repeat>
-								</ul>
-							</check>
+
+				<check if="{{\App\Lib\SignedInUser::IsAdmin()}}">
+					<fieldset>
+						<legend>App settings</legend>
+						<div class="row">
+							<div class="form-group col-sm-6 {{ empty(@View.Validation.debug_level) ? @has_success : 'has-error' }}">
+								<label for="debug_level" class="control-label">Debug level</label>
+								<input type="number" class="form-control" id="debug_level" name="debug_level" value="{{@View.Config.debug_level}}" min="0" max="3">
+								<span class="help-block">Verbosity level of debug informations.</span>
+								<check if="{{ !empty(@View.Validation.debug_level) }}">
+									<span class="help-block"><b>Validation failed with theses messages:</b></span>
+									<ul class="help-block">
+										<repeat group="{{@View.Validation.debug_level}}" value="{{@value}}">
+											<li>{{@value}}</li>
+										</repeat>
+									</ul>
+								</check>
+							</div>
+							<div class="checkbox col-sm-6 {{ empty(@View.Validation.cache) ? @has_success : 'has-error' }}">
+								<label>
+									<input type="checkbox" class="form-control" id="cache" name="cache" {{@View.Config.cache ? 'checked' : ''}}> Enable cache
+									<span class="help-block">Enable server caching system.</span>
+								</label>
+								<check if="{{ !empty(@View.Validation.cache) }}">
+									<span class="help-block"><b>Validation failed with theses messages:</b></span>
+									<ul class="help-block">
+										<repeat group="{{@View.Validation.cache}}" value="{{@value}}">
+											<li>{{@value}}</li>
+										</repeat>
+									</ul>
+								</check>
+							</div>
 						</div>
-						<div class="checkbox col-sm-6 {{ empty(@View.Validation.cache) ? @has_success : 'has-error' }}">
-							<label>
-								<input type="checkbox" class="form-control" id="cache" name="cache" {{@View.Config.cache ? 'checked' : ''}}> Enable cache
-								<span class="help-block">Enable server caching system.</span>
-							</label>
-							<check if="{{ !empty(@View.Validation.cache) }}">
-								<span class="help-block"><b>Validation failed with theses messages:</b></span>
-								<ul class="help-block">
-									<repeat group="{{@View.Validation.cache}}" value="{{@value}}">
-										<li>{{@value}}</li>
-									</repeat>
-								</ul>
-							</check>
-						</div>
-					</div>
-				</fieldset>
+					</fieldset>
+				</check>
 				
 				<div class="text-center">
 					<check if="{{ empty(@View.Validation) }}">

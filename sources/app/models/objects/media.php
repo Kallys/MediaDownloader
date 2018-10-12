@@ -87,9 +87,9 @@ class Media extends MObject
 		return YoutubeDl::QueryFormat($this, $quality, $stream);
 	}
 
-	public function Download(string $format_id)
+	public function Download(string $format_id, string $download_path)
 	{
-		return \App\Models\Downloads::instance()->New($this->mapper->_id, $format_id);
+		return \App\Models\Downloads::instance()->New($this->mapper->_id, $format_id, $download_path);
 	}
 
 	public function GetDownloadByFormatId(string $format_id)

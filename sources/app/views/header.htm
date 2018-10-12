@@ -27,12 +27,15 @@
 				</button>
 				<a class="navbar-brand" href="{{@URL_BASE}}">Media Downloader</a>
 			</div>
-			
+
 			<check if="{{\App\Lib\SignedInUser::IsUserSignedIn()}}">
 				<div class="navbar-collapse collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
 						<li><a href="{{@URL_BASE}}{{'links' | alias}}">Add links</a></li>
 						<li><a href="{{@URL_BASE}}{{'downloads', ['filter' => \App\Controllers\Downloads::Filter_all] | alias}}">Media list</a></li>
+						<check if="{{\App\Lib\SignedInUser::IsAdmin()}}">
+							<li><a href="{{@URL_BASE}}{{'user' | alias}}">User Manage</a></li>
+						</check>
 						<exclude>
 							<li><a href="{{@URL_BASE}}{{'downloads' | alias}}">Downloads <check if="\App\Lib\Downloader::background_jobs() > 0"><span class="badge">{{\App\Lib\Downloader::background_jobs()}}</span></check></a></li>
 							<li><a href="{{@URL_BASE}}{{'search' | alias}}">Search</a></li>
@@ -41,7 +44,7 @@
 					</ul>
 
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="{{@URL_BASE}}{{'admin' | alias}}">Admin</a></li>
+						<li><a href="{{@URL_BASE}}{{'admin' | alias}}">Settings</a></li>
 						<li><a href="{{@URL_BASE}}{{'logout' | alias}}">Logout</a></li>
 					</ul>
 				</div>

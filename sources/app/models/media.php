@@ -48,10 +48,14 @@ class Media extends Model
 		return $this->NewObject($this->mapper->findone(['@url = ?', $url]));
 	}
 
-	public function New(string $url)
+	public function New(string $url, string $download_path)
 	{
+	    if(!$download_path) {
+            $download_path = \App\DIR_PUBLIC_DONWLOADS;
+        }
 		$this->mapper->reset();
 		$this->mapper->url = $url;
+		$this->mapper->download_path = $download_path;
 		$this->mapper->save();
 
 		return $this->NewObject($this->mapper);

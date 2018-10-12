@@ -1,0 +1,140 @@
+<include href="header.htm"/>
+
+<div class="container">
+
+    <div class="modal" id="confirmationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title">Are your sure?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to perform the following action:</p>
+                    <p class="actionDescription" style="font-weight: bold;"></p>
+                </div>
+                <div class="modal-footer">
+                    <form method="POST" action="/user/del">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="confirmButton btn btn-primary">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title">User list</h3></div>
+                <div class="panel-body">
+                    <check if="{{empty(@View.Users)}}">
+                        <true>
+                            <div class="alert alert-info" role="alert">No User, Add User Now --></div>
+                        </true>
+                        <false>
+                            <form method="POST">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>IsAdmin</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <repeat group="{{@View.Users}}" value="{{@user}}">
+                                        <tr>
+                                            <td>{{@user->name}}</td>
+                                            <td>
+                                                <check if="{{ @user->is_admin == 1 }}">
+                                                    <true>Yes</true>
+                                                    <false>No</false>
+                                                </check>
+                                            </td>
+                                            <td class="action">
+                                                <check if="{{ @user->is_admin != 1 }}">
+                                                    <button type="button" class="btn btn-xs btn-danger"
+                                                            data-desc="Delete user with name '{{@user->name}}'?"
+                                                            data-name="username"
+                                                            data-value="{{@user->name}}" data-toggle="modal"
+                                                            data-target="#confirmationModal"
+                                                            title="Delete User" aria-label="Delete User">
+                                                        <span class="glyphicon glyphicon-trash"
+                                                              aria-hidden="true"></span>
+                                                    </button>
+                                                </check>
+                                            </td>
+                                        </tr>
+                                    </repeat>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </false>
+                    </check>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ @LANG.AddUser }}</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post">
+                        <div class="form-group {{ empty(@View.Form.Validation.name) ? @has_success : 'has-error' }}">
+                            <label for="name" class="col-sm-3 control-label">{{ @LANG.Username }}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="name" name="name" value="{{@POST.name}}"
+                                       placeholder="Username">
+                                <check if="{{ !empty(@View.Form.Validation.name) }}">
+                                    <span class="help-block">{{ @View.Form.Validation.name }}</span>
+                                </check>
+                            </div>
+                        </div>
+                        <div class="form-group {{ empty(@View.Form.Validation.password) ? @has_success : 'has-error' }}">
+                            <label for="password" class="col-sm-3 control-label">{{ @LANG.Password }}</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" id="password" name="password"
+                                       value="{{@POST.password}}" placeholder="Password">
+                                <check if="{{ !empty(@View.Form.Validation.password) }}">
+                                    <span class="help-block">{{ @View.Form.Validation.password }}</span>
+                                </check>
+                            </div>
+                        </div>
+                        <div class="form-group {{ empty(@View.Form.Validation.password_confirm) ? @has_success : 'has-error' }}">
+                            <label for="password_confirm" class="col-sm-3 control-label">{{ @LANG.PasswordConfirmation
+                                }}</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" id="password_confirm"
+                                       name="password_confirm" value="{{@POST.password_confirm}}"
+                                       placeholder="Password confirmation">
+                                <check if="{{ !empty(@View.Form.Validation.password_confirm) }}">
+                                    <span class="help-block">{{ @View.Form.Validation.password_confirm }}</span>
+                                </check>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-default">{{ @LANG.AddUser }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+  // Confirmation (modal)
+  $('#confirmationModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    modal.find('.actionDescription').html(button.data('desc'))
+    modal.find('.confirmButton').attr('name', button.data('name')).attr('value', button.data('value'))
+  })
+</script>
+
+<include href="footer.htm"/>
