@@ -42,6 +42,11 @@ abstract class SignedInUser
 	{
         return  Session::instance()->Get('is_admin');
 	}
+
+	public static function getSignedUserId()
+	{
+		return Session::instance()->Get(self::$session_key);
+	}
 }
 
 ?>

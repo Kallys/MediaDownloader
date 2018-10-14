@@ -48,6 +48,11 @@ class Users extends Model
 		return $this->NewObject($this->mapper->findone(['@name = ?', $name]));
 	}
 
+	public function GetById(string $id)
+    {
+        return $this->NewObject($this->mapper->findone(['@_id = ?', $id]));
+    }
+
 	public function New(string $name, string $password, int $is_admin = 0)
 	{
 		$this->mapper->reset();

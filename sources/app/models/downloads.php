@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\Config;
 
 class Downloads extends Model
 {
@@ -87,7 +88,7 @@ class Downloads extends Model
 		$this->mapper->reset();
 		$this->mapper->media_id		= $media_id;
 		$this->mapper->format_id 	= $format_id;
-		$this->mapper->download_path 	= $download_path;
+		$this->mapper->download_path 	= $download_path ? $download_path : Config::instance()->download_path;
 		$this->mapper->process_id	= $process_id;
 		$this->mapper->output		= $output;
 		$this->mapper->state		= $state;

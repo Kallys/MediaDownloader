@@ -3,15 +3,25 @@
 namespace App\Controllers;
 
 use App\Lib\Exception;
+use App\Lib\SignedInUser;
 use App\Lib\YoutubeDl;
 use App\Lib\Alerter;
+use App\Models\Config;
 use App\Models\Media;
+use App\Models\Users;
 use Respect\Validation\Validator;
 
 class Links extends Controller
 {
 	public function Get(\Base $f3, array $routes)
 	{
+	    $default_path =  Config::instance()->download_path;
+        $userId = SignedInUser::getSignedUserId();
+        $user = Users::instance()->GetById($userId);
+	    if(!SignedInUser::IsAdmin()) {
+	        $default_path .= $user->name . DIRECTORY_SEPARATOR;
+        }
+        $f3->set('View.default_path', $default_path);
 		echo \Template::instance()->render('links-add.html');
 	}
 
