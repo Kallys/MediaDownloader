@@ -83,7 +83,7 @@ abstract class YoutubeDl
 		$command_on_success = new Command($cmd_on_success);
 
 		// Run command
-		Process::RunBackground($command, $command_on_succes);
+		Process::RunBackground($command, $command_on_success);
 
 		// Search for youtubedl subprocess pid
 		if(is_null($pid = Process::SearchPid(['python ' . Config::Get('youtubedl_path'), $download->media_id, 'format ' . $download->format_id])))

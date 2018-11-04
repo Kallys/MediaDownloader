@@ -2,6 +2,7 @@
 
 namespace App\Models\Objects;
 
+use App\Lib\Command;
 use App\Lib\YoutubeDl;
 use App\Lib\Process;
 
@@ -51,6 +52,8 @@ class Download extends MObject
 		{
 			case self::State_Finished:
 				$result['progression'] = '100%';
+                $str = "/usr/bin/rclone copy " . $this->mapper->download_path . " Google:" . $this->mapper->download_path;
+                Process::RunBackground(new Command($str));
 				break;
 
 			case self::State_Pending:
